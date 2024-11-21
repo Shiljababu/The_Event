@@ -1,4 +1,5 @@
 The_Event - Event Management System
+
 The_Event is a comprehensive event management system that streamlines the process
 of event creation, ticket booking, and event approval. Designed to cater to both 
 event organizers and attendees, this system ensures a seamless experience for all 
