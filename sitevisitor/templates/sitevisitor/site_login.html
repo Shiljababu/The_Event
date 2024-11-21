@@ -1,0 +1,124 @@
+{% extends 'sitevisitor/site_base.html' %}
+{% load static %}
+{% block title %}
+    event | Login
+{% endblock %}
+{% block content %}
+<style>
+  .page-title {
+      background-image: url('{% static "The_event/assets/img/page-title-bg.webp" %}');
+      background-size: cover;
+      background-position: center;
+      height: 300px; /* Adjust height as needed */
+  }
+</style>
+<main class="main">
+  <!-- Page Title with Background Image -->
+  <div class="page-title" data-aos="fade"></div>
+</main>
+{% if messages %}
+<div class="container mt-3">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert" style="position: fixed; top: 20px; right: 20px; z-index: 1050;">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<div class="container-xxl">
+    <div class="authentication-wrapper d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+        <div class="registration-form text-center" style="width: 100%; max-width: 400px;">
+            <h4 class="text-center mb-4" style="color: #fff;">User Login</h4>
+
+            <form id="formAuthentication" class="mb-3" action="{% url 'site_login' %}" method="POST">
+                {% csrf_token %}
+                
+                <!-- Username Field -->
+                <div class="form-group">
+                    {{ form.username.label_tag }}
+                    {{ form.username }}
+                    {% if form.username.errors %}
+                        <div class="form-error">{{ form.username.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <!-- Password Field -->
+                <div class="form-group">
+                    {{ form.password.label_tag }}
+                    {{ form.password }}
+                    {% if form.password.errors %}
+                        <div class="form-error">{{ form.password.errors }}</div>
+                    {% endif %}
+                </div>
+                <button type="submit" class="btn btn-secondary">Sign In</button>
+                
+                  </div>
+                </div>
+            </form>
+
+            <p class="text-center">
+                <span style="color: #fff;">Don't have an account?</span>
+                <a href="{% url 'register' %}" style="color: #FF6347;">
+                    <span>Sign Up</span>
+                </a>
+            </p>
+            <p class="text-center">
+                <span style="color: #fff;">Forgot Password?</span>
+                <a href="{% url 'forgot' %}" style="color: #FF6347;">
+                    <span>Click Here</span>
+                </a>
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- Inline CSS for Transparent Form Styling -->
+<style>
+    body {
+        background-image: url('{% static "signup/images/bg.jpg" %}');
+        background-size: cover;
+        background-position: center;
+        font-family: 'Montserrat', sans-serif;
+    }
+
+    .form-control {
+        background: rgba(255, 255, 255, 0.2);
+        color: #fff;
+        border-radius: 8px;
+        border: 1px solid #fcf9f9;
+        padding: 12px;
+        margin-bottom: 15px;
+    }
+
+    .form-control::placeholder {
+        color: #e0e0e0;
+    }
+
+    .btn-secondary {
+        background-color: #FF7F50;
+        border: none;
+        border-radius: 50px;
+        padding: 12px 20px;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-secondary:hover {
+        background-color: #FF6347;
+    }
+
+    .form-error {
+        color: #ff6b6b;
+        font-size: 0.875rem;
+        margin-top: 5px;
+    }
+
+    h4 {
+        font-family: 'Poppins', sans-serif;
+        color: #fff;
+        font-weight: 600;
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,554 @@
+{% extends 'adminpanel/admin_base.html' %}
+{% load static %}
+{% block title %}Event | View Event{% endblock %}
+
+{% block content %}
+<div class="card shadow-lg border-0 mb-5">
+    <div class="card-body p-5">
+        <h1 class="display-5 text-primary mb-4 text-center">{{ event.title }}</h1>
+        <div class="d-flex justify-content-center align-items-center mb-4">
+            {% if event.event_image %}
+                <img src="{{ event.event_image.url }}" alt="{{ event.title }}" class="img-fluid rounded shadow-lg" style="max-width: 1200px; height: 500px; object-fit: cover;">
+            {% else %}
+                <img src="{% static 'default_image.jpg' %}" alt="Default Event Image" class="img-fluid rounded shadow-lg" style="max-width: 100%; height: auto; object-fit: cover;">
+            {% endif %}
+        </div>
+    
+            <style>
+                /* Container styling */
+                .event-details-container {
+                    background-color: #f9f9f9;
+                    border: 2px solid #ccc;
+                    border-radius: 15px;
+                    padding: 25px;
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                    max-width: 700px;
+                    margin: auto;
+                    text-align: left;
+                    transition: transform 0.3s ease, box-shadow 0.3s ease;
+                }
+                
+                /* Hover effect for the container */
+                .event-details-container:hover {
+                    transform: scale(1.02);
+                    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+                }
+                
+                /* Organized By and Date/Time styling */
+                .event-details-container p {
+                    font-size: 1.2rem;
+                    color: #333; /* Dark gray for readability */
+                    margin: 8px 0;
+                    font-family: 'Arial', sans-serif;
+                }
+                
+                /* Description section styling */
+                .description-container {
+                    background-color: #fff;
+                    border: 1px solid #ddd;
+                    border-radius: 10px;
+                    padding: 20px;
+                    margin-top: 20px;
+                    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+                }
+                
+                .description-header {
+                    font-size: 1.5rem;
+                    color: #000;
+                    margin-bottom: 15px;
+                    font-weight: bold;
+                    text-align: center;
+                }
+                
+                /* Description text styling */
+                .description-container p {
+                    font-size: 1.2rem;
+                    line-height: 1.6;
+                    color: #555; /* Slightly lighter gray for description text */
+                    text-align: justify; /* For a neat text layout */
+                }
+                
+                /* Animation for subtle fade-in */
+                @keyframes fadeIn {
+                    from {
+                        opacity: 0;
+                        transform: translateY(10px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+                
+                .event-details-container, .description-container {
+                    animation: fadeIn 0.8s ease-in-out;
+                }
+                </style>
+                <!-- Event Details Section -->
+    <div class="event-details-container">
+        <h5>Event Information</h5>
+        
+        <!-- Organizer and Date/Time Information -->
+        <p><strong>Organized By:</strong> {{ event.organizer.user.username }}</p>
+        <p><strong>Date:</strong> {{ event.date }} | <strong>Time:</strong> {{ event.start_time }} - {{ event.end_time }}</p>
+        
+        <!-- Event Description -->
+        <div class="event-description">
+            <h5>About</h5>
+            <p>{{ event.description }}</p>
+        </div>
+    </div>
+                
+
+            <div class="text-center mb-4">
+                <div class="ticket-info-container">
+                    <h5>Ticket Booking Information</h5>
+                    <p><strong>Standard Tickets Booked:</strong> {{ total_standard_tickets }}</p>
+                    <p><strong>Premium Tickets Booked:</strong> {{ total_premium_tickets }}</p>
+                </div>
+            </div>
+
+            <!-- Event Rating or Interest Count -->
+            <div class="text-center mb-4">
+                <div class="rating-container">
+                    {% if event.event_type == 'movie' %}
+                        <h5 class="text-center">Average Rating:</h5>
+                        <p>{{ event_rating|default:"No ratings yet" }}
+                            {{ rating_count }}
+                        </p>
+
+                        <button class="btn btn-dark" data-bs-toggle="collapse" data-bs-target="#rated-users-list" aria-expanded="false" aria-controls="rated-users-list">
+                            View Users Who Rated
+                        </button>
+                        <div class="collapse" id="rated-users-list">
+                            <ul>
+                                {% for user in rated_users %}
+                                    <li>{{ user }}</li>
+                                {% empty %}
+                                    <li>No users have rated yet.</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% else %}
+                        <h5 class="text-center">Interested Users:</h5>
+                        <p>{{ interest_count }} users interested</p>
+                        <button class="btn btn-dark" data-bs-toggle="collapse" data-bs-target="#interested-users-list" aria-expanded="false" aria-controls="interested-users-list">
+                            View Interested Users
+                        </button>
+                        <div class="collapse" id="interested-users-list" style="color: #f3eded !important; background-color: #070606;">
+                            <ul>
+                                {% for user in interested_users %}
+                                    <li>{{ user }}</li>
+                                {% empty %}
+                                    <li>No users have shown interest yet.</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+
+            <div class="reviews-section mb-5">
+                
+                {% if reviews %}
+                    <ul class="list-group">
+                        {% if event.event_type == "movie" %}
+                        <div class="container section-title" data-aos="fade-up">
+                            <h2>Reviews</h2>
+                        </div>
+                        {% if reviews %}
+                            <div class="reviews-container">
+                                {% for review in reviews %}
+                                    <div class="review-card">
+                                        <div class="review-header">
+                                            <div class="reviewer-info">
+                                                <img src="{{ review.user.profile.profile_image.url }}" alt="Reviewer Image"
+                                                     class="reviewer-image"
+                                                     style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;">
+                                                <h4>{{ review.user.username }}</h4>
+                                            </div>
+                                            <div class="review-rating">
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star"></i>
+                                                <i class="fas fa-star-half-alt"></i>
+                                                <i class="far fa-star"></i>
+                                            </div>
+                                        </div>
+                                        <div class="review-body">
+                                            <p>{{ review.review_text }}</p>
+                                        </div>
+                                        <div class="review-actions">
+                                            <form action="" method="POST" style="display:inline;">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="toggle_review_status" value="{{ review.id }}">
+                                                <button type="submit" class="btn {% if review.status == 'visible' %}btn-danger{% else %}btn-success{% endif %}">
+                                                    {% if review.status == 'visible' %}
+                                                        Hide Review
+                                                    {% else %}
+                                                        Show Review
+                                                    {% endif %}
+                                                </button>
+                                            </form>
+                                            <form action="{% url 'like_dislike_review' review.id 'like' %}" method="POST" style="display:inline;">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn-action btn-like">
+                                                    <i class="fas fa-thumbs-up"></i> Like ({{ review.likes }})
+                                                </button>
+                                            </form>
+                                            <form action="{% url 'like_dislike_review' review.id 'dislike' %}" method="POST" style="display:inline;">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn-action btn-dislike">
+                                                    <i class="fas fa-thumbs-down"></i> Dislike ({{ review.dislikes }})
+                                                </button>
+                                            </form>
+
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <p>No reviews available for this movie. Be the first to add one!</p>
+                        {% endif %}
+                    {% else %}
+                        <div class="interest-button">
+                            <p>{{ interests_count }} people are interested in this event.</p>
+                        </div>
+                    {% endif %}
+                {% else %}
+                    <p>No reviews yet.</p>
+                {% endif %}
+            </div>
+            
+            {% if user.is_staff %}
+    <form action="" method="POST" style="display:inline;">
+        {% csrf_token %}
+        <input type="hidden" name="toggle_event_status" value="{{ event.id }}">
+        <button type="submit" class="btn {% if event.status == 'visible' %}btn-danger{% else %}btn-success{% endif %}">
+            {% if event.status == 'visible' %}
+                Hide Event
+            {% else %}
+                Show Event
+            {% endif %}
+        </button>
+    </form>
+{% endif %}
+
+
+
+            
+
+        
+            
+        </div>
+    </div>
+
+</div>
+
+<!-- Additional Styles -->
+<style>
+    
+    .card {
+        border-radius: 10px;
+    }
+
+    .btn {
+        transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    }
+
+    .badge {
+        font-size: 1rem;
+    }
+
+    .card-header {
+        font-weight: bold;
+    }
+
+    .list-group-item {
+        padding: 1.25rem;
+        font-size: 1rem;
+    }
+
+    .collapse {
+        margin-top: 1rem;
+    }
+    /* Style the review card */
+.review-card {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Reviewer Info Styling */
+.reviewer-info {
+    display: flex;
+    align-items: center;
+}
+
+.reviewer-image {
+    margin-right: 10px;
+}
+
+.reviewer-info h4 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Review body text */
+.review-body p {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.5;
+}
+
+/* Action Buttons Section */
+.review-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 15px;
+}
+
+/* Button Styles */
+.btn-action {
+    padding: 8px 15px;
+    font-size: 14px;
+    border-radius: 5px;
+    text-align: center;
+    text-decoration: none;
+}
+
+/* Like and Dislike Buttons */
+.btn-like, .btn-dislike {
+    color: #fff;
+    background-color: #007bff;
+    border: 1px solid #007bff;
+}
+
+.btn-like:hover, .btn-dislike:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+.btn-like i, .btn-dislike i {
+    margin-right: 5px;
+}
+
+/* Review Hide/Show Button */
+.btn-secondary {
+    color: #fff;
+    background-color: #6c757d;
+    border: 1px solid #6c757d;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+    border-color: #5a6268;
+}
+
+.btn-secondary i {
+    margin-right: 5px;
+}
+
+
+/* Style for the Like and Dislike counts */
+.review-rating {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    color: #ff9900;
+}
+
+.review-rating i {
+    margin-right: 5px;
+}
+
+</style>
+<style>
+    /* Styling for the card container */
+    .rating-container {
+        background-color: #f3cb18;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgb(0, 0, 0);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        display: inline-block;
+    }
+    
+    /* Animation effect on hover */
+    .rating-container:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    }
+    
+    /* Styling for titles */
+    .rating-container h5 {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #070606;
+        margin-bottom: 10px;
+    }
+    
+    /* Styling for the text */
+    .rating-container p {
+        font-size: 1rem;
+        color: #080808;
+        margin: 0;
+        font-style: italic;
+    }
+    .text-align{
+        color: #070606;
+    }
+    
+    /* Adding a subtle animation */
+    .rating-container p {
+        animation: fadeIn 0.8s ease-in-out;
+    }
+    
+    @keyframes fadeIn {
+        0% {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    </style>
+   <style>
+    /* Container styling */
+    .ticket-info-container {
+        background-color: #ffffff;
+        border: 2px solid #000; /* Black border for contrast */
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0 5px 15px rgb(0, 0, 0);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        display: inline-block;
+        margin: auto;
+        max-width: 500px;
+    }
+    
+    /* Hover effect for the container */
+    .ticket-info-container:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    }
+    
+    /* Header styling */
+    .ticket-info-container h5 {
+        font-size: 1.6rem;
+        font-weight: bold;
+        color: #000;
+        margin-bottom: 15px;
+    }
+    
+    /* Text styling */
+    .ticket-info-container p {
+        font-size: 1.2rem;
+        color: #000;
+        margin: 5px 0;
+        font-family: 'Arial', sans-serif;
+        animation: fadeIn 0.8s ease-in-out;
+    }
+    
+    /* Subtle animation */
+    @keyframes fadeIn {
+        0% {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    </style>
+  <style>
+    /* Overall container for the event details */
+    .event-details-container {
+        margin: 30px auto;
+        padding: 20px;
+        max-width: 800px;
+        text-align: left;
+    }
+    
+    /* Title section for the event details */
+    .event-details-container h5 {
+        font-size: 1.5rem;
+        color: #333;
+        margin-bottom: 10px;
+        font-weight: bold;
+        text-align: center;
+    }
+    
+    /* Paragraph styling for general info like "Organized By" and "Date/Time" */
+    .event-details-container p {
+        font-size: 1.1rem;
+        color: #333;
+        line-height: 1.6;
+        margin-bottom: 15px;
+    }
+    
+    /* Styling for the event description */
+    .event-description {
+        font-size: 1.2rem;
+        color: #444;
+        line-height: 1.7;
+        margin-top: 20px;
+    }
+    
+    /* Clear all margins and paddings */
+    .event-details-container p strong {
+        font-weight: 600;
+    }
+    
+    /* Hover effect for better interactivity */
+    .event-details-container:hover {
+        background-color: #f7f7f7;
+        transform: scale(1.01);
+        transition: transform 0.3s ease, background-color 0.3s ease;
+    }
+    
+    /* Animation effect for the text */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .event-details-container {
+        animation: fadeIn 1s ease-in-out;
+    }
+    </style>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+     
+    
+    
+{% endblock %}

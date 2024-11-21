@@ -1,0 +1,10 @@
+Subject: Welcome to EventManagement!
+
+Dear {{ user.username }},
+
+Congratulations! Your registration with EventManagement was successful.
+
+We are excited to have you on board. Explore our platform and make the most out of our services.
+
+Best regards,  
+The EventManagement Team  

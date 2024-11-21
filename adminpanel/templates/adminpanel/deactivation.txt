@@ -1,0 +1,13 @@
+Subject: Account Deactivation Notice
+
+Dear {{ username }},
+
+This is to inform you that your account on The Event has been deactivated. If this was intentional, no further action is required on your part.
+
+If you did not request this deactivation or believe this is a mistake, please contact our support team immediately for assistance.
+
+We’re sorry to see you go and hope to welcome you back soon.
+
+Best regards,  
+The Event Team
+

@@ -1,0 +1,31 @@
+{% extends 'userpanel/user_base.html' %}
+{% load static %}
+{% block title %}
+    Event | User Profile
+{% endblock %}
+{% block content %}
+<style>
+    .page-title {
+        background-image: url('{% static "The_event/assets/img/page-title-bg.webp" %}');
+        background-size: cover;
+        background-position: center;
+        height: 300px; /* Adjust height as needed */
+    }
+</style>
+<main class="main">
+    <!-- Page Title with Background Image -->
+    <div class="page-title" data-aos="fade"></div>
+</main>
+<h2>Your Notifications</h2>
+<ul>
+    {% for notification in notifications %}
+    <div class="notification">
+        <p>{{ notification.message }}</p>
+        <p><small>{{ notification.created_at }}</small></p>
+    </div>
+{% empty %}
+    <p>No notifications</p>
+{% endfor %}
+
+</ul>
+{% endblock %}

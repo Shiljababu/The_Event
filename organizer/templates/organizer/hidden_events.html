@@ -1,0 +1,94 @@
+{% extends 'organizer/org_base.html' %}
+{% load static %}
+{% block title %}
+    Event | Add Event
+{% endblock %}
+{% block content %}
+
+<style>
+    .page-title {
+        background-image: url('{% static "The_event/assets/img/page-title-bg.webp" %}');
+        background-size: cover;
+        background-position: center;
+        height: 300px; /* Adjust height as needed */
+    }
+</style>
+<main class="main">
+    <!-- Page Title with Background Image -->
+    <div class="page-title" data-aos="fade"></div>
+</main>
+    <style>
+        /* Styles reused from modal */
+        .modal-content {
+            width: 80%;
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            overflow-y: auto;
+        }
+
+        .event-item {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .edit-btn, .cancel-btn {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .edit-btn {
+            background-color: #28a745;
+        }
+
+        .edit-btn:hover {
+            background-color: #218838;
+        }
+
+        .cancel-btn {
+            background-color: #dc3545;
+        }
+
+        .cancel-btn:hover {
+            background-color: #c82333;
+        }
+    </style>
+</head>
+<body>
+    <div class="modal-content">
+        <h2>Your Hidden Events</h2>
+        {% if hidden_events %}
+            {% for event in hidden_events %}
+                <div class="event-item">
+                    <p><strong>Event:</strong> {{ event.title }}</p>
+                    <p><strong>Date:</strong> {{ event.date }}</p>
+                    <p><strong>Location:</strong> {{ event.location }}</p>
+                    <p><strong>Description:</strong> {{ event.description }}</p>
+
+                    <!-- Delete Event Button -->
+                    <form action="{% url 'delete_event' event_id=event.id %}" method="POST" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="cancel-btn">Delete</button>
+                    </form>
+
+                    <!-- Edit Event Button -->
+                    <form action="{% url 'edit_event' event.id %}" method="GET" style="display: inline;">
+                        <button type="submit" class="edit-btn">Edit</button>
+                    </form>
+                </div>
+                <hr>
+            {% endfor %}
+        {% else %}
+            <p>No hidden events found.</p>
+        {% endif %}
+    </div>
+{% endblock %}

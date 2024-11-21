@@ -1,0 +1,75 @@
+{% extends 'userpanel/user_base.html' %}
+{% load static %}
+{% block title %}
+    event | UserHome
+{% endblock %}
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <!-- Profile Picture -->
+            <div class="profile-img">
+                {% if user.profile.image %}
+                    <img src="{{ user.profile.image.url }}" alt="Profile Image" class="img-fluid rounded-circle">
+                {% else %}
+                    <img src="{% static 'default_profile.jpg' %}" alt="Default Image" class="img-fluid rounded-circle">
+                {% endif %}
+            </div>
+            <br>
+            <!-- Update Profile Button -->
+            <div>
+                <a href="#" class="btn btn-primary">Update Profile</a>
+            </div>
+        </div>
+        
+        <div class="col-md-8">
+            <!-- Profile Details -->
+            <div class="profile-head">
+                <h5>{{ user.username }}</h5>
+                <h6>{{ user.email }}</h6>
+                <p class="proile-rating">Joined on: <span>{{ user.date_joined|date:"M d, Y" }}</span></p>
+            </div>
+
+            <div class="profile-bio">
+                <h6>Bio</h6>
+                <p>{{ user.profile.bio }}</p>
+            </div>
+
+            <!-- Additional Information -->
+            <div class="row">
+                <div class="col-md-6">
+                    <h6>Location</h6>
+                    <p>{{ user.profile.location }}</p>
+                </div>
+                <div class="col-md-6">
+                    <h6>Website</h6>
+                    <p>{{ user.profile.website }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .profile-img img {
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+    }
+
+    .profile-head {
+        margin-top: 20px;
+    }
+
+    .profile-bio, .profile-head h5 {
+        margin-top: 10px;
+        color: #333;
+    }
+
+    .proile-rating span {
+        font-weight: bold;
+    }
+</style>
+
+{% endblock %}

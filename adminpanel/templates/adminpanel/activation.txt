@@ -1,0 +1,13 @@
+Subject: Welcome Back, {{ username }}!
+
+Dear {{ username }},
+
+We are excited to inform you that your account on The Event has been successfully activated. You can now log in and continue exploring and booking tickets.
+
+If you have any questions or encounter issues accessing your account, please don’t hesitate to reach out to our support team.
+
+
+Happy exploring!
+
+Best regards,  
+The Event Team

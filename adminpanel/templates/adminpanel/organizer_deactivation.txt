@@ -1,0 +1,15 @@
+Subject: Organizer Account Deactivation Notice
+
+Dear {{ username }},
+
+We regret to inform you that your organizer account on The Event has been deactivated. This means you will no longer have access to organizer-specific features.
+
+If you believe this is a mistake or if you would like to appeal this decision, please contact our support team.
+
+
+
+We appreciate your contributions to our platform and hope to see you back in the future.
+
+Best regards,  
+The Event Team  
+

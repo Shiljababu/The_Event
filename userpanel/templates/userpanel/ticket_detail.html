@@ -1,0 +1,91 @@
+{% extends 'userpanel/user_base.html' %}
+{% load static %}
+
+{% block title %}
+    Event | Ticket Details
+{% endblock %}
+
+{% block content %}
+<div class="ticket-details-container">
+    <h2 class="ticket-title">Ticket Details</h2>
+    
+    <div class="ticket-info">
+        <p><strong>Event:</strong> {{ ticket.event.title }}</p>
+        <p><strong>Event Date:</strong> {{ ticket.event.date }}</p>
+        <p><strong>Ticket Type:</strong> {{ ticket.ticket_type }}</p>
+        <p><strong>Quantity:</strong> {{ ticket.quantity_booked }}</p>
+        <p><strong>Booking Date:</strong> {{ ticket.booking_date }}</p>
+        
+        {% if ticket.ticket_type == 'standard' %}
+            <p><strong>Price per Ticket:</strong> ${{ ticket.event.price_standard }}</p>
+        {% else %}
+            <p><strong>Price per Ticket:</strong> ${{ ticket.event.price_premium }}</p>
+        {% endif %}
+
+        <p><strong>Total Price:</strong> ${{ total_price }}</p>
+    </div>
+    
+    <div class="button-container">
+        <a href="{% url 'user_profile' %}" class="btn btn-primary">Back to Bookings</a>
+    </div>
+</div>
+
+
+<style>
+    /* Main container styles */
+.ticket-details-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.ticket-details-container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.ticket-title {
+    text-align: center;
+    color: #333;
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+}
+
+.ticket-info {
+    color: #555;
+}
+
+.ticket-info p {
+    font-size: 1.2rem;
+    line-height: 1.5;
+}
+
+strong {
+    color: #333;
+}
+
+.button-container {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.btn {
+    padding: 10px 20px;
+    font-size: 1rem;
+    color: #fff;
+    background: linear-gradient(45deg, #007bff, #0056b3);
+    border: none;
+    border-radius: 5px;
+    transition: background 0.3s;
+}
+
+.btn:hover {
+    background: linear-gradient(45deg, #0056b3, #007bff);
+}
+
+</style>
+{% endblock %}

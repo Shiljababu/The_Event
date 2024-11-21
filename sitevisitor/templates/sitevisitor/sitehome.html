@@ -1,0 +1,95 @@
+{% extends 'sitevisitor/site_base.html' %}
+{% load static %}
+{% block title %}
+    Event | UserHome
+{% endblock %}
+{% block content %}
+<style>
+    /* Styling for full-screen background image */
+    .page-title {
+        background-image: url('{% static "The_event/assets/img/page-title-bg.webp" %}');
+        background-size: cover; /* Ensure the image covers the entire area */
+        background-position: center; /* Center the image */
+        height: 100vh; /* Full screen height */
+        width: 100%; /* Full width */
+        margin: 0; /* Remove any default margins */
+        display: flex; /* Optional: For centering content */
+        align-items: center; /* Optional: Center vertically */
+        justify-content: center; /* Optional: Center horizontally */
+        text-align: center; /* Optional: Align text center */
+        color: white; /* Optional: Text color for overlay text */
+    }
+
+    /* Styling for cards */
+    .section {
+        background-color: #03084ecb;
+        color: #fcf8f8;
+        padding: 10px 20px;
+        border-radius: 5px;
+    }
+
+    .card {
+        transition: box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Body styling */
+    body {
+        margin: 0; /* Remove body margin */
+        overflow-x: hidden; /* Prevent horizontal scroll */
+        background-color: rgba(224, 215, 215, 0.486);
+    }
+
+    .main {
+        margin-top: 0; /* Remove any extra margin above main content */
+    }
+</style>
+
+<main class="main">
+    <!-- Fullscreen Background Image -->
+    <div class="page-title" data-aos="fade">
+        <h1><a href="index.html" class="logo d-flex align-items-center me-auto">
+            <img src="{% static 'The_event/assets/img/logo.png' %}" alt="">
+            <!-- Uncomment the line below if you also wish to use a text logo -->
+            <!-- <h1 class="sitename">TheEvent</h1>  -->
+          </a></h1>
+        
+    </div>
+
+    <!-- Event Categories and Cards -->
+    <div class="container py-5">
+        {% for category, items in events.items %}
+            <h5 class="section">{{ category }}</h5>
+            <div class="row mb-5">
+                {% if items %}
+                    {% for item in items %}
+                        <div class="col-md-6 col-xl-4">
+                            <a href="{% url 'site_login' %}" class="card-link" style="text-decoration: none; color: inherit;">
+                                <div class="card mb-3" style="max-width: 300px; margin: auto;">
+                                    {% if item.event_image %}
+                                        <img class="card-img-top" src="{{ item.event_image.url }}" alt="{{ item.title }} Image" />
+                                    {% else %}
+                                        <img class="card-img-top" src="{% static 'sneat/assets/img/elements/default.jpg' %}" alt="Default Image" />
+                                    {% endif %}
+                                    <div class="card-body" style="background-color: black; color: beige;">
+                                        <h5 class="card-title text-center">{{ item.title }}</h5>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="col-12">
+                        <div class="alert alert-warning" role="alert">
+                            No {{ category|lower }} added yet.
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+</main>
+{% endblock %}

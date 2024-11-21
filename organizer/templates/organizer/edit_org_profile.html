@@ -1,0 +1,207 @@
+{% extends 'organizer/org_base.html' %}
+{% load static %}
+{% block title %}
+    Edit Profile | Organizer
+{% endblock %}
+{% block content %}
+<style>
+  .page-title {
+      background-image: url('{% static "The_event/assets/img/page-title-bg.webp" %}');
+      background-size: cover;
+      background-position: center;
+      height: 300px; /* Adjust height as needed */
+  }
+</style>
+<main class="main">
+  <!-- Page Title with Background Image -->
+  <div class="page-title" data-aos="fade"></div>
+</main>
+<head>
+  <title>Edit Profile</title>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="{% static 'signup/css/style.css' %}">
+  <style>
+    /* Ensure custom styles are loaded correctly */
+    body {
+      background-color: #eef2f5;
+      font-family: 'Roboto', sans-serif;
+    }
+
+    /* Form container */
+    .form-container {
+      max-width: 800px;
+      margin: 50px auto;
+      background: #ffffff;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .form-header {
+      background: linear-gradient(90deg, #0077b6, #48cae4);
+      color: #fff;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .form-header h2 {
+      font-size: 2rem;
+      margin: 0;
+    }
+
+    .form-header p {
+      margin-top: 5px;
+      font-size: 1rem;
+      color: #e0f7fa;
+    }
+
+    /* Form body */
+    .form-body {
+      padding: 25px 40px;
+    }
+
+    /* Style the form groups */
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      font-weight: 500;
+      margin-bottom: 5px;
+      display: block;
+      color: #333;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      background: #f9f9f9;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      border-color: #0077b6;
+      background: #ffffff;
+      box-shadow: 0 0 8px rgba(0, 119, 182, 0.2);
+    }
+
+    .form-group .form-error {
+      font-size: 0.85rem;
+      color: #e63946;
+      margin-top: 5px;
+    }
+
+    /* Align checkbox with the label properly */
+    .form-group .form-check {
+      display: flex;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    .form-check input[type="checkbox"] {
+      margin-right: 10px; /* Adjusts space between checkbox and label */
+      vertical-align: middle; /* Vertically aligns the checkbox */
+    }
+
+    .form-check label {
+      margin: 0; /* Ensures no extra margin on the left */
+      font-size: 1rem; /* Keeps the label text consistent in size */
+    }
+
+    /* Footer section */
+    .form-footer {
+      text-align: center;
+      padding: 20px;
+      background: #f1f1f1;
+      border-top: 1px solid #ddd;
+    }
+
+    .form-footer button {
+      background: #0077b6;
+      color: #fff;
+      padding: 12px 30px;
+      border: none;
+      border-radius: 5px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .form-footer button:hover {
+      background: #005f8c;
+    }
+
+    /* Media query */
+    @media (max-width: 768px) {
+      .form-body {
+        padding: 20px;
+      }
+
+      .form-footer {
+        padding: 15px;
+      }
+    }
+
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <div class="form-header">
+      <h2>Edit Your Profile</h2>
+      <p>Update your details to keep your profile accurate and relevant.</p>
+    </div>
+    <div class="form-body">
+      <form method="post" enctype="multipart/form-data" class="edit-profile-form">
+        {% csrf_token %}
+        
+        {% for field in user_form %}
+          
+          <div class="form-group">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.errors %}
+            <div class="form-error">
+              {% for error in field.errors %}
+                <p>{{ error }}</p>
+              {% endfor %}
+            </div>
+            {% endif %}
+          </div>
+          
+        {% endfor %}
+        
+        {% for field in profile_form %}
+          <div class="form-group">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.errors %}
+            <div class="form-error">
+              {% for error in field.errors %}
+                <p>{{ error }}</p>
+              {% endfor %}
+            </div>
+            {% endif %}
+          </div>
+        {% endfor %}
+
+        <div class="form-group form-check">
+          <input type="checkbox" id="clear_image" name="clear_image">
+          <label for="clear_image">Clear Profile Image</label>
+        </div>
+
+        <div class="form-footer">
+          <button type="submit">Update Profile</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+{% endblock %}

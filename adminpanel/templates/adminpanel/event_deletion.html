@@ -1,0 +1,45 @@
+{% extends 'adminpanel/admin_base.html' %}
+{% load static %}
+{% block title %}
+    Event Deletion Requests
+{% endblock %}
+
+{% block content %}
+    <h1>Event Deletion Requests</h1>
+
+    {% if deletion_requests %}
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Event Title</th>
+                    <th>Organizer</th>
+                    <th>Reason</th>
+                    <th>Date Submitted</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for request in deletion_requests %}
+                    <tr>
+                        <td>{{ request.event.title }}</td>
+                        <td>{{ request.organizer.username }}</td>
+                        <td>{{ request.reason }}</td>
+                        <td>{{ request.created_at }}</td>
+                        <td>
+                            <form action="{% url 'approve_event_deletion' request.id %}" method="POST" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-success">Approve</button>
+                            </form>
+                            <form action="{% url 'reject_event_deletion' request.id %}" method="POST" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger">Reject</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No deletion requests at the moment.</p>
+    {% endif %}
+{% endblock %}

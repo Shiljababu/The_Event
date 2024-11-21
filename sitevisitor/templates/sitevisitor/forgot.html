@@ -1,0 +1,87 @@
+{% extends 'sitevisitor/site_base.html' %}
+{% load static %}
+{% block title %}
+    Blog | ForgotPassword
+{% endblock %}
+
+{% block content %}
+<style>
+  .form-error {
+      color: red;
+      font-size: 0.875em;
+      margin-top: 0.25rem;
+  }
+  
+  .form-box {
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 30px;
+      border-radius: 10px;
+      background-color: #ffffff;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      text-align: center;
+  }
+
+  .form-box h4 {
+      margin-bottom: 1rem;
+  }
+
+  .form-box p {
+      margin-bottom: 1.5rem;
+  }
+
+  .form-box .btn-primary {
+      margin-top: 1rem;
+  }
+
+  .forgot-password-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f8f9fa;
+  }
+
+</style>
+<style>
+  .page-title {
+      background-image: url('{% static "The_event/assets/img/page-title-bg.webp" %}');
+      background-size: cover;
+      background-position: center;
+      height: 300px; /* Adjust height as needed */
+  }
+</style>
+<main class="main">
+  <!-- Page Title with Background Image -->
+  <div class="page-title" data-aos="fade"></div>
+</main>
+<div class="forgot-password-wrapper">
+  <div class="form-box">
+    
+
+    <h4>Forgot Password? 🔒</h4>
+    <p>Enter your email and we'll send you instructions to reset your password.</p>
+
+    <form id="formAuthentication" action="{% url 'forgot' %}" method="POST">
+      {% csrf_token %}
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        {{ form.email }}
+      </div>
+      <button type="submit" class="btn btn-primary d-grid w-100">Send Reset Link</button>
+    </form>
+
+    <div class="text-center mt-2">
+      <a href="{% url 'site_otp' %}" class="text-decoration-none">
+        <i class="bx bx-chevron-left scaleX-n1-rtl bx-sm"></i>
+        Back to login
+      </a>
+    </div>
+  </div>
+</div>
+<style>
+  .btn-primary {
+    background-color: #FF7F50;
+  }
+</style>
+{% endblock %}

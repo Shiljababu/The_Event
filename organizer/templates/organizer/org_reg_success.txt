@@ -1,0 +1,10 @@
+Hello {{ username }},
+
+Welcome to the Organizer Platform!
+
+We are excited to have you on board. You can now log in to your account and start organizing events and managing your activities seamlessly.
+
+If you have any questions, feel free to reach out to our support team.
+
+Best regards,  
+The Organizer Platform Team

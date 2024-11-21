@@ -1,0 +1,135 @@
+{% extends 'adminpanel/admin_base.html' %}
+{% load static %}
+{% block title %}
+    Organizer Profile | {{ organizer.user.username }}
+{% endblock %}
+
+{% block content %}
+<div class="container-xxl flex-grow-1 container-p-y" style="margin-top: 50px; background-color: #f9f9f9;">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Tabs Navigation -->
+            <ul class="nav nav-pills mb-4">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#organizerDetails" data-bs-toggle="tab">
+                        <i class="bx bx-user me-1"></i> Organizer Details
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#eventsManaged" data-bs-toggle="tab">
+                        <i class="bx bx-calendar me-1"></i> Events Managed
+                    </a>
+                </li>
+            </ul>
+
+            <!-- Tab Contents -->
+            <div class="tab-content shadow-lg">
+                <!-- Organizer Details Section -->
+                <div class="tab-pane fade show active" id="organizerDetails">
+                    <div class="card mb-4 border-0">
+                        <div class="card-header bg-primary text-white">
+                            <h5>Organizer Profile</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex align-items-start gap-4">
+                                {% if organizer.profile_image %}
+                                    <img src="{{ organizer.profile_image.url }}" alt="Organizer Avatar" class="rounded-circle shadow" height="120" width="120">
+                                {% else %}
+                                    <img src="{% static 'default_image.jpg' %}" alt="Default Avatar" class="rounded-circle shadow" height="120" width="120">
+                                {% endif %}
+                                <div>
+                                    <h4 class="fw-bold">{{ organizer.user.username }} {{ organizer.user.last_name }}</h4>
+                                    <p class="text-muted">{{ organizer.user.email }}</p>
+                                    <p><strong>Phone:</strong> {{ organizer.phone }}</p>
+                                    <p><strong>Role:</strong> Organizer</p>
+                                </div>
+                                <div class="ms-auto">
+                                    <form method="post" action="{% url 'admin_org_profile' organizer.id %}">
+                                        {% csrf_token %}
+                                        {% if organizer.user.is_active %}
+                                            <button type="submit" name="action" value="deactivate" class="btn btn-warning">
+                                                <i class="bx bx-block"></i> Deactivate
+                                            </button>
+                                        {% else %}
+                                            <button type="submit" name="action" value="activate" class="btn btn-success">
+                                                <i class="bx bx-check"></i> Activate
+                                            </button>
+                                        {% endif %}
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <hr class="my-4">
+                        <div class="card-body">
+                            <h5>Additional Information</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="form-label">Description</label>
+                                    <textarea class="form-control bg-light" readonly>{{ organizer.profile_description }}</textarea>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">ID Proof</label>
+                                    {% if organizer.id_proof %}
+                                        <img src="{{ organizer.id_proof.url }}" alt="ID Proof" class="img-fluid rounded shadow mt-3">
+                                    {% else %}
+                                        <p class="text-muted mt-2">No ID proof uploaded.</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Events Managed Section -->
+                <div class="tab-pane fade" id="eventsManaged">
+                    <div class="card border-0">
+                        <div class="card-header bg-secondary text-white">
+                            <h5>Events Managed by {{ organizer.user.username }}</h5>
+                        </div>
+                        <div class="card-body">
+                            {% if events %}
+                                <div class="row">
+                                    {% for event in events %}
+                                    <a href="{% url 'view_each_event' event.id %}" class="list-group-item list-group-item-action">
+                                        <div class="row align-items-center">
+                                            <div class="col-md-2">
+                                                {% if event.event_image %}
+                                                    <img class="img-thumbnail" src="{{ event.event_image.url }}" alt="Event Image">
+                                                {% else %}
+                                                    <img class="img-thumbnail" src="{% static 'assets/img/elements/default_event.jpg' %}" alt="Default Event Image">
+                                                {% endif %}
+                                            </div>
+                                            <div class="col-md-10">
+                                                <h5 class="mb-1">{{ event.title }}</h5>
+                                                <p class="mb-1">{{ event.description }}</p>
+                                                <small>Event Date: {{ event.event_date|date:"F j, Y" }}</small>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <div class="mt-2">
+                                        {% if event.status == 'visible' %}
+                                            <form method="post" action="{% url 'hide_event' event.id %}">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-danger">Hide</button>
+                                            </form>
+                                        {% else %}
+                                            <form method="post" action="{% url 'show_event' event.id %}">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-success">Show</button>
+                                            </form>
+                                        {% endif %}
+                                    </div>
+                                    {% endfor %}
+                                      
+                                </div>
+                            {% else %}
+                                <p>No events managed by this organizer.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,73 @@
+{% extends 'sitevisitor/site_base.html' %}
+{% load static %}
+{% block title %}
+    event | org_register
+{% endblock %}
+{% block content %}
+<head>
+  <title>Sign Up</title>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="{% static 'signup/css/style.css' %}">
+</head>
+<body>
+<section class="ftco-section" style="background-color: cadetblue;">
+    <div class="row justify-content-center">
+      <div class="col-lg-10">
+        <div class="wrap d-md-flex">
+          <div class="text-wrap p-4 p-lg-5 d-flex img d-flex align-items-end" style="background-color: aqua;">
+            <div class="text w-100">
+              <h2 class="mb-4">Welcome to the signup form</h2>
+              <p>Join our community and explore more!</p>
+            </div>
+          </div>
+          <div class="login-wrap p-4 p-md-5">
+            <h3 class="mb-3">Create an account</h3>
+            <form method="post" enctype="multipart/form-data" class="signup-form">
+              {% csrf_token %}
+              
+              {% for field in user_form %}
+              <div class="form-group d-flex align-items-center">
+                <label class="label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                  <div class="form-error text-danger">
+                    {% for error in field.errors %}
+                      <p>{{ error }}</p>
+                    {% endfor %}
+                  </div>
+                {% endif %}
+              </div>
+              {% endfor %}
+              
+              {% for field in profile_form %}
+              <div class="form-group d-flex align-items-center">
+                <label class="label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                  <div class="form-error text-danger">
+                    {% for error in field.errors %}
+                      <p>{{ error }}</p>
+                    {% endfor %}
+                  </div>
+                {% endif %}
+              </div>
+              {% endfor %}
+
+              <div class="form-group">
+                <button type="submit" class="btn btn-secondary submit p-3">Create an account</button>
+              </div>
+            </form>
+            <p class="text-center">
+              <span>Already have an account?</span>
+              <a href="{% url 'org_login' %}">
+                  <span>Sign in instead</span>
+              </a>
+          </p>
+          </div>
+        </div>
+      </div>
+    </div>
+</section>
+</body>
+{% endblock %}

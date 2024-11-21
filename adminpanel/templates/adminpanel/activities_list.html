@@ -1,0 +1,148 @@
+{% extends 'adminpanel/admin_base.html' %}
+{% load static %}
+{% block title %}
+Evento | ActivitiesList
+{% endblock %}
+{% block content %}
+<div class="container-xxl flex-grow-1 container-p-y" style="margin-top: 50px; background-color: aliceblue;">
+    <div class="d-flex align-items-center mb-3">
+        <!-- Pills Navigation -->
+        <ul class="nav nav-pills mb-0 flex-fill" role="tablist">
+            <li class="nav-item flex-fill">
+                <button
+                    type="button"
+                    class="nav-link active"
+                    role="tab"
+                    data-bs-toggle="tab"
+                    data-bs-target="#navs-pills-justified-home"
+                    aria-controls="navs-pills-justified-home"
+                    aria-selected="true"
+                >
+                    <i class="tf-icons bx bx-calendar"></i> All Activities
+                    <span class="badge rounded-pill badge-center h-px-20 w-px-20 bg-danger">{{ visible_count }}</span>
+                </button>
+            </li>
+            <li class="nav-item flex-fill">
+                <button
+                    type="button"
+                    class="nav-link"
+                    role="tab"
+                    data-bs-toggle="tab"
+                    data-bs-target="#navs-pills-justified-hidden"
+                    aria-controls="navs-pills-justified-hidden"
+                    aria-selected="false"
+                >
+                    <i class="tf-icons bx bx-hide"></i> Hidden Activities
+                    <span class="badge rounded-pill badge-center h-px-20 w-px-20 bg-success">{{ hidden_count }}</span>
+                </button>
+            </li>
+        </ul>
+        
+
+        <!-- Search Form -->
+        <form method="GET" action="{% url 'activities_list' %}" class="d-flex ms-3 flex-shrink-1">
+            <input type="text" name="q" class="form-control me-2" placeholder="Search activities..." value="{{ request.GET.q }}">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+    </div>
+
+    <!-- Tab Content -->
+    <div class="tab-content">
+        <div class="tab-pane fade show active" id="navs-pills-justified-home" role="tabpanel">
+            <div class="card">
+                <div class="table-responsive text-nowrap">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Activity Name</th>
+                                <th>Organizer</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for activity in visible_activities %}
+                            <tr>
+                                <td><a href="{% url 'view_each_event' event_id=activity.id %}">{{ activity.title }}</a></td>
+                                <td>{{ activity.organizer.user.username }}</td>
+                                <td>{{ activity.date|date:"d-m-Y" }}</td>
+                               
+                                <td>
+                                    <div class="dropdown">
+                                        <button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle" data-bs-toggle="dropdown">
+                                            <i class="bx bx-dots-vertical-rounded"></i>
+                                        </button>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item" href="{% url 'view_each_event' event_id=activity.id %}">View</a>
+                                            <form action="{% url 'hide_event' 'activity' activity.id %}" method="POST" style="display: inline;">
+                                                {% csrf_token %}
+                                                {% if activity.status == 'visible' %}
+                                                <button type="submit" class="dropdown-item">Hide</button>
+                                                {% else %}
+                                                <button type="submit" class="dropdown-item">Show</button>
+                                                {% endif %}
+                                            </form>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5">No Activities available.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hidden Activities Tab Content -->
+        <div class="tab-pane fade" id="navs-pills-justified-hidden" role="tabpanel">
+            <div class="card">
+                <div class="table-responsive text-nowrap">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Activity Name</th>
+                                <th>Organizer</th>
+                                <th>Date</th>
+                                
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for activity in hidden_activities %}
+                            <tr>
+                                <td><a href="{% url 'event_view' event_id=activity.id %}">{{ activity.title }}</a></td>
+                                <td>{{ activity.organizer.user.username }}</td>
+                                <td>{{ activity.date|date:"d-m-Y"  }}</td>
+                                
+                                <td>
+                                    <div class="dropdown">
+                                        <button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle" data-bs-toggle="dropdown">
+                                            <i class="bx bx-dots-vertical-rounded"></i>
+                                        </button>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item" href="{% url 'event_view' event_id=activity.id %}">View</a>
+                                            <form action="{% url 'show_event' 'activity' activity.id %}" method="POST" style="display: inline;">
+                                                {% csrf_token %}
+                                                <button type="submit" class="dropdown-item">Show</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5">No hidden Activities available.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

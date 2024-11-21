@@ -1,0 +1,229 @@
+{% extends 'adminpanel/admin_base.html' %}
+{% load static %}
+{% block title %}
+Adminhome | Evento
+{% endblock %}
+{% block content %}
+<!-- Content -->
+<br><br><br>
+
+{% for category, items in event_categories %}
+    <h5 class="pb-3 mb-4 text-uppercase" style="font-weight: bold; color: #333; border-bottom: 3px solid #007BFF;">
+        {{ category }}
+    </h5>
+
+    <div class="row mb-5 gx-3 gy-4">
+        {% if items %}
+            {% for item in items %}
+                <div class="col-md-6 col-xl-4 d-flex align-items-stretch">
+                    <div class="card shadow-lg border-0 rounded-3 overflow-hidden">
+                        <a href="{% url 'view_each_event' event_id=item.id %}" class="text-decoration-none">
+                            <div class="card-img-container position-relative">
+                                {% if item.event_image %}
+                                    <img class="card-img-top event-img" src="{{ item.event_image.url }}" alt="{{ item.title }} Image" />
+                                {% else %}
+                                    <img class="card-img-top event-img" src="{% static 'sneat/assets/img/elements/default.jpg' %}" alt="Default Image" />
+                                {% endif %}
+                                <div class="img-overlay position-absolute w-100 h-100 d-flex align-items-center justify-content-center">
+                                    <span class="text-white fs-5 fw-bold">View Event</span>
+                                </div>
+                            </div>
+                        </a>
+                        <div class="card-body text-center p-4" style="background-color: white; color: #333;">
+                            <h5 class="card-title mb-2" style="font-size: 1.25rem;">{{ item.title }}</h5>
+                            <p class="card-text">{{ item.description|truncatewords:20 }}</p>
+                        </div>
+                        <div class="card-footer bg-transparent border-top-0 d-flex justify-content-between align-items-center">
+                            {% if item.status == 'visible' %}
+                                <form method="POST" action="{% url 'hide_event' item.event_type item.id %}" style="display:inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger btn-sm">Hide Event</button>
+                                </form>
+                            {% else %}
+                                <form method="POST" action="{% url 'show_event' item.event_type item.id %}" style="display:inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-success btn-sm">Show Event</button>
+                                </form>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12">
+                <div class="alert alert-warning text-center" role="alert">
+                    No {{ category|lower }} added yet.
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endfor %}
+
+<style>
+    .card-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: space-between;
+        margin-top: 30px;
+    }
+
+    .card {
+        width: 100%; /* Full width for smaller screens */
+        flex: 1;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgb(0, 0, 0);
+        overflow: hidden;
+        background-color: #fff;
+        transition: box-shadow 0.3s ease, transform 0.3s ease;
+        margin: 10px;
+    }
+
+    .card:hover {
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        transform: scale(1.05);
+    }
+
+    .card-img-container {
+    position: relative;
+    overflow: hidden;
+    border-bottom: 3px solid #0e0e0e;
+    width: 100%;
+    height: 300px; /* Fixed height for uniformity */
+}
+
+.event-img {
+    width: 100%;
+    height: 100%; /* Ensures all images take up the full height of the container */
+    object-fit: cover; /* Ensures the image covers the area without distorting */
+    transition: transform 0.4s ease; /* Smooth hover effect */
+}
+
+.card-img-container:hover .event-img {
+    transform: scale(1.1); /* Zooms in on hover */
+}
+
+.img-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4); /* Slight overlay on hover */
+    opacity: 0;
+    transition: opacity 0.4s ease; /* Smooth transition for overlay */
+}
+
+.card-img-container:hover .img-overlay {
+    opacity: 1; /* Show overlay on hover */
+} 
+
+.event-img {
+    width: 100%;
+    height: 100%; /* Ensures all images take up the full height of the container */
+    object-fit: cover; /* Ensures the image covers the area without distorting */
+    transition: transform 0.4s ease;
+}
+
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+
+.card {
+    width: 100%; /* Full width for smaller screens */
+    flex: 1;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgb(0, 0, 0);
+    overflow: hidden;
+    background-color: #fff;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    margin: 10px;
+}
+
+.card:hover {
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    transform: scale(1.05);
+}
+
+.card-body {
+    padding: 10px; /* Reduced padding */
+    text-align: center;
+    height: 30px; /* Reduced height for less white space */
+    overflow: hidden;
+}
+
+.card-body h5 {
+    font-size: 1.1rem; /* Slightly smaller font size */
+    font-weight: bold;
+    margin-bottom: 5px; /* Reduced margin between title and description */
+}
+
+.card-body p {
+    font-size: 0.9rem; /* Smaller description text */
+    color: #fdfbfb;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 0; /* Remove extra space below description */
+}
+
+.card-footer {
+    padding: 0.75rem;
+    border-top: none;
+}
+
+.btn-sm {
+    font-size: 0.875rem;
+    padding: 0.25rem 0.75rem;
+}
+
+.alert-warning {
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+/* Responsive design */
+@media (min-width: 576px) {
+    .card {
+        width: 48%; /* Two cards in a row */
+    }
+}
+
+@media (min-width: 768px) {
+    .card {
+        width: 32%; /* Three cards in a row */
+    }
+}
+
+@media (min-width: 992px) {
+    .card {
+        width: 23%; /* Four cards in a row */
+    }
+}
+
+</style>
+
+<!-- Content -->
+<div class="card-container">
+    {% for event in events %}
+        <div class="card">
+            <div class="card-img-container">
+                <img src="{{ event.event_image.url }}" alt="{{ event.title }}" class="event-img">
+                <div class="img-overlay"></div>
+            </div>
+            <div class="card-body">
+                <h5>{{ event.title }}</h5>
+                <p>{{ event.description|truncatewords:20 }}</p>
+            </div>
+            <div class="card-footer">
+                <a href="{% url 'edit_event' event.id %}" class="btn btn-primary btn-sm">Edit Event</a>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+<!-- / Content -->
+{% endblock %}

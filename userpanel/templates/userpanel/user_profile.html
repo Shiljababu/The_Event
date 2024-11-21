@@ -1,0 +1,244 @@
+{% extends 'userpanel/user_base.html' %}
+{% load static %}
+{% block title %}
+    Event | User Profile
+{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'profile/css/style.css' %}">
+      <!-- Demo CSS (No need to include it into your project) -->
+      <link rel="stylesheet" href="{% static 'profile/css/demo.css' %}">
+      <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;600&display=swap" rel="stylesheet">
+      <div class="cd__action">
+        <a href="https://www.codehim.com/html5-css3/user-profile-page-template-in-html-css" title="Back to download and tutorial page" class="cd__btn back">Back to Tutorial</a>
+     </div>
+<main class="cd__main">
+    <!-- Start DEMO HTML (Use the following code into your project)-->
+    <div class="profile-page">
+<div class="content">
+<div class="content__cover">
+    <div class="content__avatar" style="background: #8f6ed5 url('{{ profile.profile_image.url }}') center center no-repeat; background-size: cover;"></div>
+ <div class="content__bull"><span></span><span></span><span></span><span></span><span></span>
+ </div>
+</div>
+<div class="content__actions"><a href="#">
+    <div class="id-proof-container">
+        <div class="id-proof-box" id="idProofBox">
+            {% if profile.id_proof %}
+                <img id="idProof" class="id-proof-img" src="{{ profile.id_proof.url }}" alt="ID Proof" />
+            {% else %}
+                <img id="idProof" class="id-proof-img" src="path/to/default-image.jpg" alt="No ID Proof Available" />
+            {% endif %}
+        </div>
+    </div>
+    
+    
+    
+   </svg><span></span></a><a href="{% url 'edit_profile' %}">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="24" height="24">
+        <path fill="currentColor" d="M402.3 26.6c-27.6-27.6-71.3-27.6-98.9 0l-220 220c-6.2 6.2-10.3 14.4-11.9 23l-32 160c-2.1 10.6 1.4 21.7 8.5 28.8 7.1 7.1 17.3 10.6 27.8 8.5l160-32c8.6-1.6 16.8-5.7 23-11.9l220-220c27.6-27.6 27.6-71.3 0-98.9L402.3 26.6zm-80.5 79.3l32.7 32.7-144.8 144.8-32.7-32.7 144.8-144.8zm-167.4 276.4l110.5 110.5-138.9 27.8 27.8-138.9 110.5 110.5zm296.5-215.7c18.8 18.8 18.8 49.3 0 68.1l-9.7 9.7-32.7-32.7 9.7-9.7c18.8-18.8 49.3-18.8 68.1 0z"/>
+    </svg>
+   </svg><span>Edit Profile</span></a></div>
+<div class="content__title">
+
+ <h1>{{ profile.user.username }}</h1><span>{{ profile.user.email }}</span>
+</div>
+<div class="content__description">
+ <p>{{ profile.profile_description }}</p>
+ <p>{{ profile.phone }}</p>
+</div>
+<!-- Booked Tickets Button -->
+<!-- Booked Tickets Button -->
+<div class="content__button">
+    <a class="button" href="javascript:void(0);" id="bookedTicketsBtn" onclick="openModal()">
+        <div class="button__border"></div>
+        <div class="button__bg"></div>
+        <p class="button__text">Booked Tickets</p>
+    </a>
+</div>
+
+<!-- Modal Structure for Booked Tickets -->
+<!-- Ticket cancellation modal -->
+<div class="modal" id="ticketModal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeModal()">&times;</span>
+        <h2>Cancel Ticket</h2>
+        {% if booked_tickets %}
+            {% for ticket in booked_tickets %}
+                <div class="ticket-item">
+                    <a href="{% url 'ticket_detail' ticket_id=ticket.id %}">
+                    <p><strong>Event:</strong> {{ ticket.event.title }}</p>
+                    <p><strong>Ticket Type:</strong> {{ ticket.ticket_type }}</p>
+                    <p><strong>Quantity:</strong> {{ ticket.quantity_booked }}</p>
+                    <p><strong>Booking Date:</strong> {{ ticket.booking_date }}</p>
+                </a>
+                    {% if ticket.non_cancelable %}
+                        <!-- Display Booked button or text if the event is within 20 days -->
+                        <button class="btn btn-secondary" disabled>Booked</button>
+                    {% else %}
+                        <!-- Form to cancel this specific ticket -->
+                        <form action="{% url 'refund' ticket_id=ticket.id %}" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="ticket_id" value="{{ ticket.id }}">
+                        <button type="submit" class="cancel-btn">Cancel Ticket</button>
+                        </form>
+                    {% endif %}
+                </div>
+                <hr>
+            {% endfor %}
+        {% else %}
+            <p>No tickets booked.</p>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+    
+/* Modal Overlay */
+.modal {
+    display: none; /* Initially hidden */
+    position: fixed;
+    top: 0;
+    left: 0;
+    margin-top: 100px;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.5); /* Overlay with transparency */
+}
+
+/* Modal Content */
+.modal-content {
+    width: 80%;
+    max-width: 500px;
+    max-height: 80vh; /* Limit height */
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    position: relative;
+    overflow-y: auto; /* Make content scrollable */
+}
+
+/* Scrollbar for modal content */
+.modal-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 4px;
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+}
+
+/* Ticket Item Styling */
+.ticket-item {
+    margin-bottom: 15px;
+}
+
+/* Close Button */
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #333;
+}
+
+/* Cancel Button */
+.cancel-btn {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.cancel-btn:hover {
+    background-color: #c82333;
+}
+</style>
+
+<script>
+// Function to open the modal
+function openModal() {
+    document.getElementById('ticketModal').style.display = 'flex';
+}
+
+// Function to close the modal
+function closeModal() {
+    document.getElementById('ticketModal').style.display = 'none';
+}
+</script>
+
+
+
+
+
+
+
+</div>
+<div class="bg">
+<div><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+</div>
+</div>
+<div class="theme-switcher-wrapper" id="theme-switcher-wrapper"><span>Themes color</span>
+<ul>
+ <li><em class="is-active" data-theme="orange"></em></li>
+ <li><em data-theme="green"></em></li>
+ <li><em data-theme="purple"></em></li>
+ <li><em data-theme="blue"></em></li>
+</ul>
+</div>
+<div class="theme-switcher-button" id="theme-switcher-button">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
+ <path fill="currentColor" d="M352 0H32C14.33 0 0 14.33 0 32v224h384V32c0-17.67-14.33-32-32-32zM0 320c0 35.35 28.66 64 64 64h64v64c0 35.35 28.66 64 64 64s64-28.65 64-64v-64h64c35.34 0 64-28.65 64-64v-32H0v32zm192 104c13.25 0 24 10.74 24 24 0 13.25-10.75 24-24 24s-24-10.75-24-24c0-13.26 10.75-24 24-24z"></path>
+</svg>
+</div>
+</div>
+    <!-- END EDMO HTML (Happy Coding!)-->
+ 
+ <script src="{% static 'profile/js/script.js' %}"></script>
+ <style>
+    /* Container for the ID proof box */
+.id-proof-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px;
+}
+
+.id-proof-box {
+    width: 150px;
+    height: 50px;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.id-proof-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+
+ </style>
+
+ 
+{% endblock %}

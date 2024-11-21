@@ -1,0 +1,126 @@
+{% extends 'adminpanel/admin_base.html' %}
+{% load static %}
+{% block title %}
+Event | Add Venue
+{% endblock %}
+{% block content %}
+
+<!-- Container for the form -->
+<div class="add-venue-container">
+    <h2 class="page-title">Add a New Venue</h2>
+
+    <form method="post" enctype="multipart/form-data" class="venue-form">
+        {% csrf_token %}
+        
+        <!-- Venue Name Field -->
+        <div class="form-group">
+            <label for="id_name">Venue Name</label>
+            {{ form.name }}
+        </div>
+
+        <!-- Venue Description Field -->
+        <div class="form-group">
+            <label for="id_description">Description</label>
+            {{ form.description }}
+        </div>
+
+        <!-- Venue Image Field -->
+        <div class="form-group">
+            <label for="id_venue_image">Venue Image</label>
+            {{ form.venue_image }}
+        </div>
+
+        <!-- Submit Button -->
+        <div class="form-group submit-btn">
+            <button type="submit" class="btn-submit">Add Venue</button>
+        </div>
+    </form>
+</div>
+
+
+
+<!-- Include custom CSS -->
+
+<style>
+    .add-venue-container {
+        max-width: 600px;
+        margin: 30px auto;
+        padding: 20px;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .page-title {
+        font-size: 24px;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .venue-form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    label {
+        font-size: 16px;
+        color: #555;
+    }
+
+    input, textarea {
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 16px;
+    }
+
+    textarea {
+        resize: vertical;
+        min-height: 120px;
+    }
+
+    .form-group input[type="file"] {
+        padding: 5px;
+    }
+
+    .submit-btn {
+        display: flex;
+        justify-content: center;
+    }
+
+    .btn-submit {
+        padding: 12px 24px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-submit:hover {
+        background-color: #0056b3;
+    }
+
+    .btn-submit:focus {
+        outline: none;
+    }
+
+    /* Style for form errors (if any) */
+    .form-group .error {
+        color: red;
+        font-size: 14px;
+    }
+
+</style>
+{% endblock %}

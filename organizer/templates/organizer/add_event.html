@@ -1,0 +1,129 @@
+{% extends 'organizer/org_base.html' %}
+{% load static %}
+{% block title %}
+    Event | Add Event
+{% endblock %}
+{% block content %}
+<style>
+    .page-title {
+        background-image: url('{% static "The_event/assets/img/page-title-bg.webp" %}');
+        background-size: cover;
+        background-position: center;
+        height: 300px; /* Adjust height as needed */
+    }
+</style>
+<main class="main">
+    <!-- Page Title with Background Image -->
+    <div class="page-title" data-aos="fade"></div>
+</main>
+
+{% if event_form.errors %}
+    <div class="text-danger">
+        {{ event_form.errors }}
+    </div>
+{% endif %}
+
+<div class="container-xxl flex-grow-1 container-p-y" style="background-color: rgb(207, 182, 182); width: 100vw; margin-left: 0px;">
+
+    <div class="row">
+        <!-- Add Event Form -->
+        <div class="col-md-8 offset-md-2">
+            <div class="card mb-4">
+                <h5 class="card-header">Add New Event</h5>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="{{ event_form.event_type.id_for_label }}" class="form-label">Event Type</label>
+                            {{ event_form.event_type }}
+                        </div>
+                        
+                        
+                        <div class="mb-3">
+                            <label for="{{ event_form.title.id_for_label }}" class="form-label">Event Title</label>
+                            {{ event_form.title }}
+                        </div>
+                        <div class="mb-3">
+                            <label for="{{ event_form.description.id_for_label }}" class="form-label">Event Description</label>
+                            {{ event_form.description }}
+                        </div>
+                        <div class="mb-3">
+                            <label for="{{ event_form.date.id_for_label }}" class="form-label">Event Date</label>
+                            {{ event_form.date }}
+                        </div>
+                        <div class="mb-3">
+                            <label for="{{ event_form.start_time.id_for_label }}" class="form-label">Start Time</label>
+                            {{ event_form.start_time }}
+                        </div>
+                        <div class="mb-3">
+                            <label for="{{ event_form.end_time.id_for_label }}" class="form-label">End Time</label>
+                            {{ event_form.end_time }}
+                        </div>
+                        <div class="mb-3">
+                            <label for="{{ event_form.location.id_for_label }}" class="form-label">Location</label>
+                            {{ event_form.location }}
+                        </div>
+                        <div class="mb-3">
+                            <label for="{{ event_form.event_image.id_for_label }}" class="form-label">Event Image</label>
+                            {{ event_form.event_image }}
+                            {% if event_form.event_image.errors %}
+                                <div class="text-danger">{{ event_form.event_image.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="mb-3">
+                            <label for="{{ event_form.venue.id_for_label }}" class="form-label">Venue</label>
+                            {{ event_form.venue }}
+                        </div>
+                        <div class="mb-3 form-check">
+                            <label for="{{ event_form.is_cancelled.id_for_label }}" class="form-check-label">Is Cancelled</label>
+                            {{ event_form.is_cancelled }}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="{{ event_form.price_standard.id_for_label }}" class="form-label">Standard Ticket Price</label>
+                            {{ event_form.price_standard }}
+                        </div>
+                        <div class="mb-3">
+                            <label for="{{ event_form.price_premium.id_for_label }}" class="form-label">Premium Ticket Price</label>
+                            {{ event_form.price_premium }}
+                        </div>
+                        <div class="mb-3">
+                            <label for="{{ event_form.seats_available_standard.id_for_label }}" class="form-label">Standard Ticket Quantity</label>
+                            {{ event_form.seats_available_standard }}
+                        </div>
+                        <div class="mb-3">
+                            <label for="{{ event_form.seats_available_premium.id_for_label }}" class="form-label">Premium Ticket Quantity</label>
+                            {{ event_form.seats_available_premium }}
+                        </div>
+                        
+                        
+                        <!-- <h5>Standard Ticket</h5>
+                        {{ ticket_form_standard.as_p }}
+
+                        <h5>Premium Ticket</h5>
+                        {{ ticket_form_premium.as_p }} -->
+                        
+                        <button type="submit" class="btn btn-primary">Add Event</button>
+                    </form>
+                    <script>
+                        document.querySelector('form').addEventListener('submit', function(event) {
+                            const numberOfCastInput = document.querySelector('#{{ event_form.number_of_cast_or_team.id_for_label }}');
+                            if (!numberOfCastInput.value) {
+                                alert('Please enter the number of cast/team members.');
+                                event.preventDefault(); // Prevent form submission
+                            }
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    .container-xxl.flex-grow-1.container-p-y {
+        margin-left: 0px !important;
+        width: calc(100vw + 280px);
+    }
+</style>
+
+{% endblock %}

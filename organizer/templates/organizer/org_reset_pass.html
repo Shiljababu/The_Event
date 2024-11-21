@@ -1,0 +1,57 @@
+{% extends 'organizer/org_base.html' %}
+{% load static %}
+{% block title %}
+    Blog | Reset Password
+{% endblock %}
+
+{% block content %}
+<style>
+    .page-title {
+        background-image: url('{% static "The_event/assets/img/page-title-bg.webp" %}');
+        background-size: cover;
+        background-position: center;
+        height: 300px; /* Adjust height as needed */
+    }
+</style>
+<main class="main">
+    <!-- Page Title with Background Image -->
+    <div class="page-title" data-aos="fade"></div>
+</main>
+<div class="container-xxl flex-grow-1 container-p-y" style="margin-top: 50px">
+    
+
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <div class="card mb-4">
+                <h5 class="card-header">Change Password</h5>
+                <div class="card-body demo-vertical-spacing demo-only-element">
+                    <!-- Form for password reset -->
+                    <form method="post" action="{% url 'org_reset_pass' %}">
+                        {% csrf_token %}
+                        
+                        <!-- Current Password -->
+                        <div class="form-password-toggle mb-3">
+                            <label class="form-label" for="current-password">Current Password</label>
+                            {{ form.old_password }}  <!-- Render old password field -->
+                        </div>
+
+                        <!-- New Password -->
+                        <div class="form-password-toggle mb-3">
+                            <label class="form-label" for="new-password">New Password</label>
+                            {{ form.new_password1 }}  <!-- Render new password field -->
+                        </div>
+
+                        <!-- Confirm New Password -->
+                        <div class="form-password-toggle mb-3">
+                            <label class="form-label" for="confirm-password">Confirm New Password</label>
+                            {{ form.new_password2 }}  <!-- Render confirm password field -->
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Change Password</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

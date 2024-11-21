@@ -1,0 +1,124 @@
+{% extends 'userpanel/user_base.html' %}
+{% load static %}
+
+{% block title %}
+    Event | Conference
+{% endblock %}
+
+{% block content %}
+<style>
+    .page-title {
+        background-image: url('{% static "The_event/assets/img/page-title-bg.webp" %}');
+        background-size: cover;
+        background-position: center;
+        height: 300px;
+        text-align: center;
+        color: #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .section {
+        background-color: #03084ecb;
+        color: #fcf8f8;
+        padding: 20px;
+        border-radius: 5px;
+        margin-top: 30px;
+        font-size: 1.25rem;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    .scroll-container {
+        display: flex;
+        overflow-x: auto;
+        gap: 20px;
+        padding: 20px;
+        scroll-behavior: smooth;
+    }
+
+    .scroll-container::-webkit-scrollbar {
+        height: 8px;
+    }
+
+    .scroll-container::-webkit-scrollbar-thumb {
+        background: #444;
+        border-radius: 5px;
+    }
+
+    .scroll-container::-webkit-scrollbar-track {
+        background: #ddd;
+    }
+
+    .card {
+        flex: 0 0 auto;
+        width: 300px;
+        background-color: #111;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .card-img-top {
+        height: 200px;
+        object-fit: cover;
+    }
+
+    .card-body {
+        padding: 15px;
+        color: #fff;
+        text-align: center;
+    }
+
+    .card-title {
+        font-size: 1.25rem;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .alert-warning {
+        background-color: #ffeb3b;
+        color: #000;
+        text-align: center;
+        font-weight: bold;
+        padding: 10px;
+        border-radius: 5px;
+    }
+</style>
+
+<main class="main">
+    <div class="page-title" data-aos="fade"></div>
+</main>
+
+<h5 class="section">Conference</h5>
+
+<div class="scroll-container">
+    {% if events %}
+        {% for event in events %}
+        <a href="{% url 'view_event' event.event_type event.id %}">
+            <div class="card">
+                {% if event.event_image %}
+                    <img class="card-img-top" src="{{ event.event_image.url }}" alt="{{ event.title }} Image" />
+                {% else %}
+                    <img class="card-img-top" src="{% static 'sneat/assets/img/elements/default.jpg' %}" alt="Default Image" />
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ event.title }}</h5>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    {% else %}
+        <div class="alert alert-warning" role="alert">
+            No Conference added yet.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

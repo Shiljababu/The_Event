@@ -1,0 +1,662 @@
+{% extends 'organizer/org_base.html' %}
+{% load static %}
+
+{% block title %}
+    Organizer | Event View
+{% endblock %}
+
+{% block content %}
+<section id="hero" class="hero section dark-background">
+    <!-- Background Image (blurred) -->
+    <div class="background-image"></div>
+
+    <!-- Card with Clear Image -->
+    <div class="card-container">
+        <div class="image-card">
+            <img src="{% if event.event_image %}{{ event.event_image.url }}{% else %}{% static 'The_event/assets/img/hero-bg.jpg' %}{% endif %}" 
+                 alt="Event Poster" class="clear-image" data-aos="fade-in">
+        </div>
+    </div>
+
+    <div class="event-info">
+        <h1 class="event-title">{{ event.title }}</h1>
+
+        <!-- Display 'Rate Now' button only for movie events -->
+        {% if event.event_type == 'movie' %}
+            <button class="rate-now-btn">Rate Now</button>
+        {% endif %}
+    </div>
+</section>
+
+
+<style>
+/* Hero Section Styling */
+#hero {
+    position: relative;
+    width: 100%;
+    height: 100vh; /* Full viewport height */
+    overflow: hidden; /* Hide anything outside */
+}
+
+/* Background Image Styling (blurred) */
+.background-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('{% if event.event_image %}{{ event.event_image.url }}{% else %}{% static 'The_event/assets/img/hero-bg.jpg' %}{% endif %}');
+    background-repeat: no-repeat;
+    background-position: top;
+    background-size: cover;
+    z-index: 1; /* Ensure the background stays behind */
+}
+
+/* Card Container (holds the card and moves it to the left) */
+.card-container {
+    position: absolute;
+    top: 50%; /* Vertically center */
+    left: 5%; /* Move the card to the left side */
+    transform: translateY(-50%); /* Center vertically */
+    z-index: 2; /* Make sure the card is above the blurred background */
+    display: flex;
+    align-items: center;
+    height: 70%; /* Adjust height */
+    width: 25%; /* Adjust width */
+}
+
+/* Image Card Styling */
+.image-card {
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); /* Shadow to make the box stand out */
+    border-radius: 15px; /* Rounded corners for the box */
+    background-color: rgba(255, 255, 255, 0.8); /* Light background for the card */
+    z-index: 10; /* Ensure the card is above the background */
+}
+
+/* Clear Image Styling (inside the card) */
+.clear-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures the image maintains its aspect ratio */
+    border-radius: 10px; /* Optional rounded corners for the image */
+}
+
+/* Event Info (Title and Button) Styling */
+.event-info {
+    position: absolute;
+    top: 50%; /* Vertically center */
+    left: 35%; /* Move the content to the right */
+    transform: translateY(-50%); /* Center vertically */
+    z-index: 3;
+    color: white;
+    text-align: left;
+    width: 60%; /* Adjust width to fit content */
+}
+
+.event-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.event-rating {
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+}
+
+.rate-now-btn {
+    padding: 10px 20px;
+    background-color: #ff8c00;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.rate-now-btn:hover {
+    background-color: #ff6a00;
+}
+</style>
+
+
+
+
+<!-- About Section -->
+<section id="about-event" class="about section">
+    <div class="container position-relative" data-aos="fade-up">
+        <div class="section-title text-center">
+            <h2>About {{ event.title }}</h2>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <p>{{ event.description }}</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Ticket Summary Section -->
+<section id="ticket-summary" class="ticket-summary section">
+    <div class="container section-title" data-aos="fade-up">
+        <h2>Ticket Summary</h2>
+    </div>
+    <div class="container">
+        <div class="row gy-4">
+            <div class="col-lg-6">
+                <h4>Standard Tickets</h4>
+                <p>Booked: {{ standard_ticket_count }}</p>
+            </div>
+            <div class="col-lg-6">
+                <h4>Premium Tickets</h4>
+                <p>Booked: {{ premium_ticket_count }}</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- Schedule Section -->
+<section id="schedule" class="schedule section">
+    <div class="container section-title" data-aos="fade-up">
+        <h2>Event Schedule</h2>
+        <p>Join us for exciting movies today!</p>
+    </div>
+
+    <div class="container">
+        <div class="tab-content row justify-content-center" data-aos="fade-up">
+            <div class="col-lg-12">
+                {% for event in day_event %}
+                <div class="row schedule-item justify-content-center">
+                    <!-- Schedule Card -->
+                    <div class="col-md-4 mb-4">
+                        <div class="card schedule-card">
+                            <div class="card-body">
+                                <div class="schedule-header">
+                                    <h4 class="card-title">{{ event.title }}</h4>
+                                    <p class="event-date">{{ event.date|date:"F j, Y" }}</p>
+                                </div>
+                                <div class="schedule-details">
+                                    <p class="event-time">
+                                        <strong>Time:</strong> 
+                                        <time>{{ event.start_time|time:"H:i" }} - {{ event.end_time|time:"H:i" }}</time>
+                                    </p>
+                                    <p class="event-location">
+                                        <strong>Location:</strong> {{ event.location }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <p>No events scheduled for today.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Styles -->
+<style>
+    #schedule {
+        background-color: #f7f7f7;
+        padding: 60px 0;
+    }
+
+    .section-title h2 {
+        font-size: 2.5rem;
+        color: #050505;
+        text-align: center;
+        margin-bottom: 20px;
+        font-weight: bold;
+    }
+
+    .section-title p {
+        text-align: center;
+        font-size: 1.1rem;
+        color: #030303;
+    }
+
+    .schedule-card {
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.904);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        height: 100%;
+    }
+
+    .schedule-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 6px 20px rgb(245, 242, 242);
+    }
+
+    .schedule-header {
+        background-color: #dd0926;
+        color: white;
+        padding: 15px;
+        border-radius: 8px 8px 0 0;
+        text-align: center;
+    }
+
+    .schedule-header h4 {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+
+    .event-date {
+        font-size: 1.2rem;
+        margin-top: 5px;
+        color: #f3eeee;
+    }
+
+    .schedule-details {
+        padding: 20px;
+        font-size: 1rem;
+        color: #030303;
+        text-align: center;
+    }
+
+    .event-time, .event-location {
+        margin-bottom: 15px;
+    }
+
+    .event-time strong, .event-location strong {
+        color: #30336b;
+    }
+
+    /* Hover effect for individual schedule items */
+    .schedule-item {
+        animation: fadeInUp 0.8s ease-out forwards;
+    }
+
+    @keyframes fadeInUp {
+        0% {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+{% if event.event_type == "movie" %}
+    <div class="container section-title" data-aos="fade-up">
+        <h2>Reviews</h2>
+    </div>
+    {% if reviews %}
+        <div class="reviews-container">
+            {% for review in reviews %}
+                <div class="review-card">
+                    <div class="review-header">
+                        <div class="reviewer-info">
+                            <img src="{{ review.user.profile.profile_image.url }}" alt="Reviewer Image" class="reviewer-image" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;">
+                            <h4>{{ review.user.username }}</h4>
+                        </div>
+                        <div class="review-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                            <i class="far fa-star"></i>
+                        </div>
+                    </div>
+                    <div class="review-body">
+                        <p>{{ review.review_text }}</p>
+                    </div>
+                    <div class="review-actions">
+                        <form action="{% url 'like_dislike_review' review.id 'like' %}" method="POST" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn-action btn-like">
+                                <i class="fas fa-thumbs-up"></i> Like ({{ review.likes }})
+                            </button>
+                        </form>
+                        <form action="{% url 'like_dislike_review' review.id 'dislike' %}" method="POST" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn-action btn-dislike">
+                                <i class="fas fa-thumbs-down"></i> Dislike ({{ review.dislikes }})
+                            </button>
+                        </form>
+                        {% if review.user == request.user %}
+                            <a href="{% url 'edit_review' event.id review.id %}" class="btn-action btn-edit">
+                                <i class="fas fa-edit"></i> Edit Review
+                            </a>
+                        {% endif %}
+                        {% if review.user == request.user %}
+                        <form action="{% url 'delete_review' review.id %}" method="POST" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn-action btn-delete" onclick="return confirm('Are you sure you want to delete this review?');">
+                                <i class="fas fa-trash-alt"></i> Delete
+                            </button>
+                        </form>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No reviews available for this movie. Be the first to add one!</p>
+    {% endif %}
+{% else %}
+    <div class="interest-button">
+        <p>{{ interests_count }} people are interested in this event.</p>
+    </div>
+{% endif %}
+
+
+<style>
+    
+    /* Delete Button Styling */
+    .btn-delete {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 8px 16px;
+        background-color: #ff4d4d; /* Red background */
+        color: white; /* White text */
+        border: none;
+        border-radius: 5px; /* Rounded corners */
+        font-size: 0.9rem; /* Adjust text size */
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease; /* Smooth transition */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    }
+
+    /* Hover Effect */
+    .btn-delete:hover {
+        background-color: #d11a2a; /* Darker red */
+        transform: scale(1.05); /* Slight enlarge */
+        box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15); /* Enhance shadow */
+    }
+
+    /* Focus Effect */
+    .btn-delete:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(255, 77, 77, 0.5); /* Focus ring */
+    }
+
+    /* Optional Icon Styling */
+    .btn-delete i {
+        font-size: 1rem;
+    }
+    .btn-interest {
+    background-color: #007bff; /* Original button color */
+    color: white;
+}
+
+.btn-success {
+    background-color: green; /* Change to green when the user is interested */
+    color: white;
+}
+/* Main container styling */
+#reviews {
+    padding: 60px 0;
+    background-color: #f4f7fc;
+}
+
+/* Section title */
+.section-title h2 {
+    font-size: 30px;
+    font-weight: bold;
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Horizontal Scroll Container for Reviews */
+.reviews-container {
+    display: flex;
+    overflow-x: auto;
+    gap: 20px;
+    padding-bottom: 20px;
+    justify-content: flex-start;
+}
+
+/* Individual review cards */
+.review-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    min-height: 350px;
+}
+
+.review-card:hover {
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+    transform: translateY(-5px);
+}
+
+/* Reviewer Info (Image and Name) */
+.reviewer-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.reviewer-image {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.review-header h4 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #34495e;
+}
+
+/* Review Rating */
+.review-rating i {
+    color: #f39c12;
+    margin-right: 5px;
+}
+
+/* Review Body (Text) */
+.review-body p {
+    font-size: 15px;
+    color: #7f8c8d;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+/* Review Actions (Buttons) */
+.review-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.review-actions button,
+.review-actions a {
+    background-color: #fff;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease;
+    margin-bottom: 8px;
+}
+
+.review-actions button i,
+.review-actions a i {
+    margin-right: 8px;
+}
+
+.review-actions button:hover,
+.review-actions a:hover {
+    background-color: #f8f8f8;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.btn-action {
+    color: #2980b9;
+}
+
+.btn-like {
+    color: #27ae60;
+}
+
+.btn-dislike {
+    color: #e74c3c;
+}
+
+.btn-edit,
+.btn-delete {
+    color: #3498db;
+}
+
+.btn-edit:hover {
+    text-decoration: underline;
+}
+
+.btn-delete {
+    color: #e74c3c;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .review-card {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+
+    .reviews-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .review-actions {
+        justify-content: flex-start;
+    }
+}
+
+</style>
+
+<!-- Venue Section -->
+<section id="venue" class="venue section">
+    <div class="container section-title" data-aos="fade-up">
+        <h2>Event Venue</h2>
+    </div>
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                {% if event.venue %}
+                    <h4 class="venue-name">{{ event.venue.name }}</h4>
+                    <p class="venue-description">{{ event.venue.description }}</p>
+                {% else %}
+                    <p class="venue-description">Venue details are not available.</p>
+                {% endif %}
+            </div>
+            <div class="col-lg-6">
+                <div class="venue-image-container">
+                    <img src="{% if event.venue.venue_image %}{{ event.venue.venue_image.url }}{% else %}{% static 'The_event/assets/img/default-venue.jpg' %}{% endif %}" alt="Venue Image" class="img-fluid venue-image">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<style>
+    /* General Section Styling */
+.venue.section {
+    padding: 60px 0;
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+.venue .section-title h2 {
+    font-size: 36px;
+    text-align: center;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 40px;
+}
+
+/* Venue Text and Image Styling */
+.venue-name {
+    font-size: 28px;
+    color: #34495e;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.venue-description {
+    font-size: 18px;
+    line-height: 1.6;
+    color: #7f8c8d;
+    margin-bottom: 30px;
+}
+
+.venue-image-container {
+    text-align: center;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.venue-image {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .venue-name {
+        font-size: 24px;
+    }
+    
+    .venue-description {
+        font-size: 16px;
+    }
+}
+
+</style>
+<!-- Action Buttons Section -->
+<!-- Action Buttons Section -->
+<section id="actions" class="actions section">
+    <div class="container text-center" data-aos="fade-up">
+        <div style="display: flex; justify-content: center; align-items: center; gap: 75%;">
+            <!-- Edit Event Button -->
+            <a href="{% url 'edit_event' event.id %}" class="btn btn-primary">Edit Event</a>
+
+            <!-- Conditional Buttons -->
+            {% if event.status == 'visible' %}
+            <form method="POST" action="{% url 'contact_form' event.id %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-warning">Request Deletion</button>
+            </form>
+            {% else %}
+            <form method="POST" action="{% url 'delete_event' event.id %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Delete Event</button>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+
+
+{% endblock %}

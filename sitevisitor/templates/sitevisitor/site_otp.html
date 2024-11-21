@@ -1,0 +1,70 @@
+{% extends 'sitevisitor/site_base.html' %}
+{% load static %}
+{% block title %}
+    event | Site_otp
+{% endblock %}
+{% block content %}
+ <!-- Content -->
+ <style>
+  .page-title {
+      background-image: url('{% static "The_event/assets/img/page-title-bg.webp" %}');
+      background-size: cover;
+      background-position: center;
+      height: 300px; /* Adjust height as needed */
+  }
+</style>
+<main class="main">
+  <!-- Page Title with Background Image -->
+  <div class="page-title" data-aos="fade"></div>
+</main>
+ <div class="container-fluid d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+    <div class="authentication-wrapper authentication-basic" style="max-width: 400px; width: 100%;">
+      <div class="authentication-inner">
+        <!-- OTP Card -->
+        <div class="card">
+          <div class="card-body p-4">
+            <!-- Logo -->
+            <div class="app-brand justify-content-center">
+              <a href="index.html" class="app-brand-link gap-2 text-center">
+                <span class="app-brand-logo demo">
+                  <svg
+                    width="25"
+                    viewBox="0 0 25 42"
+                    version="1.1"
+                    xmlns="http://www.w3.org/2000/svg"
+                    xmlns:xlink="http://www.w3.org/1999/xlink"
+                  >
+                    <!-- SVG content here -->
+                  </svg>
+                </span>
+                <span class="app-brand-text demo text-body fw-bolder">Evento</span>
+              </a>
+            </div>
+            <!-- /Logo -->
+
+            <!-- OTP Form -->
+            <div class="card-body text-center">
+                <h5 class="card-title mb-4">Enter OTP</h5>
+                <form id="otp-form" action="{% url 'site_otp' %}" method="POST">
+                    {% csrf_token %}
+                    <div class="mb-3 text-start">
+                        <label for="otp" class="form-label">OTP</label>
+                        {{ form.otp }}
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Submit</button>
+                </form>
+            </div>
+            <!-- /OTP Form -->
+          </div>
+        </div>
+        <!-- /OTP Card -->
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .btn-primary {
+      background-color: #FF7F50;
+    }
+  </style>
+{% endblock %}

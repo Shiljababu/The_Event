@@ -1,0 +1,171 @@
+{% extends 'sitevisitor/site_base.html' %}
+{% load static %}
+{% block title %}
+    event | Register
+{% endblock %}
+{% block content %}
+<style>
+    .page-title {
+        background-image: url('{% static "The_event/assets/img/page-title-bg.webp" %}');
+        background-size: cover;
+        background-position: center;
+        height: 300px; /* Adjust height as needed */
+    }
+</style>
+<main class="main">
+    <!-- Page Title with Background Image -->
+    <div class="page-title" data-aos="fade"></div>
+</main>
+{% if messages %}
+<div class="container mt-3">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert" style="position: fixed; top: 20px; right: 20px; z-index: 1050;">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<div class="container-xxl">
+    <div class="authentication-wrapper d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+        <div class="registration-form text-center" style="width: 100%; max-width: 400px;">
+            <h4 class="text-center mb-4" style="color: #fff;">User Registration</h4>
+
+            <form id="formAuthentication" class="mb-3" action="{% url 'register' %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <!-- Form Fields -->
+                <div class="form-group">
+                    {{ user_form.username.label_tag }}
+                    {{ user_form.username }}
+                    {% if user_form.username.errors %}
+                        <div class="form-error">{{ user_form.username.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    {{ user_form.email.label_tag }}
+                    {{ user_form.email }}
+                    {% if user_form.email.errors %}
+                        <div class="form-error">{{ user_form.email.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    {{ user_form.password1.label_tag }}
+                    {{ user_form.password1 }}
+                    {% if user_form.password1.errors %}
+                        <div class="form-error">{{ user_form.password1.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    {{ user_form.password2.label_tag }}
+                    {{ user_form.password2 }}
+                    {% if user_form.password2.errors %}
+                        <div class="form-error">{{ user_form.password2.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <!-- Profile Form Fields -->
+                <div class="form-group">
+                    {{ profile_form.phone.label_tag }}
+                    {{ profile_form.phone }}
+                    {% if profile_form.phone.errors %}
+                        <div class="form-error">{{ profile_form.phone.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    {{ profile_form.profile_description.label_tag }}
+                    {{ profile_form.profile_description }}
+                    {% if profile_form.profile_description.errors %}
+                        <div class="form-error">{{ profile_form.profile_description.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    {{ profile_form.profile_image.label_tag }}
+                    {{ profile_form.profile_image }}
+                    {% if profile_form.profile_image.errors %}
+                        <div class="form-error">{{ profile_form.profile_image.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    {{ profile_form.id_proof.label_tag }}
+                    {{ profile_form.id_proof }}
+                    {% if profile_form.id_proof.errors %}
+                        <div class="form-error">{{ profile_form.id_proof.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-secondary">Register</button>
+                    </div>
+                </div>
+            </form>
+
+            <p class="text-center">
+                <span style="color: #fff;">Already have an account?</span>
+                <a href="{% url 'site_login' %}" style="color:cadetblue;">
+                    <span>Sign in instead</span>
+                </a>
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- Inline CSS for Transparent Form Styling -->
+<style>
+    body {
+        background-image: url('{% static "signup/images/bg.jpg" %}');
+        background-size: cover;
+        background-position: center;
+        font-family: 'Montserrat', sans-serif;
+    }
+
+    .form-control {
+        background: rgba(255, 255, 255, 0.2);
+        color: #fff;
+        border-radius: 8px;
+        border: 1px solid #fcf9f9;
+        padding: 12px;
+        margin-bottom: 15px;
+    }
+
+    .form-control::placeholder {
+        color: #e0e0e0;
+    }
+
+    .btn-secondary {
+        background-color: cadetblue;
+        border: none;
+        border-radius: 8px;
+        padding: 12px 20px;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-secondary:hover {
+        background-color:cadetblue;
+    }
+
+    .form-error {
+        color: cadetblue;
+        font-size: 0.875rem;
+        margin-top: 5px;
+    }
+
+    h4 {
+        font-family: 'Poppins', sans-serif;
+        color: #fff;
+        font-weight: 600;
+    }
+    .form-group label {
+      color: cadetblue;
+    }
+</style>
+{% endblock %}

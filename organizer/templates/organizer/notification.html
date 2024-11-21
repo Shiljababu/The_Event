@@ -1,0 +1,146 @@
+{% extends 'organizer/org_base.html' %}
+{% load static %}
+{% block title %}
+    Notifications
+{% endblock %}
+{% block content %}
+<style>
+    .page-title {
+        background-image: url('{% static "The_event/assets/img/page-title-bg.webp" %}');
+        background-size: cover;
+        background-position: center;
+        height: 300px; /* Adjust height as needed */
+    }
+</style>
+<main class="main">
+    <!-- Page Title with Background Image -->
+    <div class="page-title" data-aos="fade"></div>
+</main>
+<div class="notifications-container">
+    <h1 class="notifications-title">Notifications</h1>
+
+    {% if notifications %}
+        <div class="notification-list">
+            {% for notification in notifications %}
+                <div class="notification-card {% if not notification.is_read %}unread{% endif %}">
+                    <div class="notification-content">
+                        <p class="notification-message">{{ notification.message }}</p>
+                        <span class="notification-timestamp">{{ notification.created_at }}</span>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="no-notifications">You have no notifications at the moment.</p>
+    {% endif %}
+</div>
+
+
+
+<style>
+/* General Container */
+.notifications-container {
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 30px;
+    background: linear-gradient(135deg, #ffffff, #f3f4f6);
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+    background-color: #fff;
+}
+
+/* Title */
+.notifications-title {
+    font-size: 2.5em;
+    color: #222;
+    text-align: center;
+    margin-bottom: 30px;
+    font-weight: bold;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Notification List */
+.notification-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Notification Card */
+.notification-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 20px;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+/* Unread Notification Card */
+.notification-card.unread {
+    background-color: #e6f7e6; /* Light green for unread notifications */
+    border-left: 6px solid #28a745; /* Green highlight */
+}
+
+/* Hover Effect */
+.notification-card:hover {
+    transform: scale(1.03);
+    background-color: #eef7ff; /* Light blue hover effect */
+}
+
+/* Notification Content */
+.notification-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+}
+
+/* Notification Message */
+.notification-message {
+    font-size: 1.2em;
+    color: #333;
+    font-weight: 600;
+    margin: 0;
+}
+
+/* Notification Timestamp */
+.notification-timestamp {
+    font-size: 0.85em;
+    color: #888;
+    font-style: italic;
+    margin: 0;
+    align-self: flex-end;
+}
+
+/* No Notifications */
+.no-notifications {
+    font-size: 1.4em;
+    color: #555;
+    text-align: center;
+    padding: 40px 0;
+    font-style: italic;
+    opacity: 0.8;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .notifications-container {
+        padding: 20px;
+    }
+
+    .notification-card {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .notification-timestamp {
+        align-self: flex-start;
+    }
+}
+</style>
+{% endblock %}

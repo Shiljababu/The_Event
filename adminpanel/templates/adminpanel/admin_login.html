@@ -1,0 +1,88 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+  	
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet">
+
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	
+	<link rel="stylesheet" href="{% static 'signup/css/style.css' %}">
+
+	</head>
+	<body>
+	<section class="ftco-section">
+		<div class="container">
+			<div class="row justify-content-center">
+				<div class="col-md-6 text-center mb-5">
+					<h2 class="heading-section"></h2>
+				</div>
+			</div>
+			<div class="row justify-content-center">
+				<div class="col-lg-10">
+					<div class="wrap d-md-flex">
+						<div class="text-wrap p-4 p-lg-5 d-flex img d-flex align-items-end" style="background-image: url(images/bg.jpg);">
+							<div class="text w-100">
+								<h2 class="mb-4">Welcome to sign in form</h2>
+								<p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
+							</div>
+			      </div>
+						<div class="login-wrap p-4 p-md-5">
+	      			<h3 class="mb-3">Sign in to continue</h3>
+					  <form method="post" action="{% url 'admin_login' %}" class="signin-form">
+						{% csrf_token %}
+						<div class="row">
+							<div class="col-md-12">
+								<div class="form-group d-flex align-items-center">
+									<label class="label" for="username">Username</label>
+									<input type="text" name="username" class="form-control" placeholder="Enter Username">
+								</div>
+							</div>
+					
+							<div class="col-md-12">
+								<div class="form-group d-flex align-items-center">
+									<label class="label" for="password">Password</label>
+									<input type="password" name="password" class="form-control" placeholder="Enter Password">
+								</div>
+							</div>
+					
+							<div class="col-md-12">
+								<div class="form-group">
+									<button type="submit" class="btn btn-secondary">Sign In</button>
+								</div>
+							</div>
+						</div>
+					</form>
+					<!-- / Navbar -->
+          {% if messages %}
+          
+              {% for message in messages %}
+                  
+                
+                  </div>
+                  <script>
+                    alert('{{message}}')
+                  </script>
+              {% endfor %}
+          </div>
+      {% endif %}
+		          
+		         
+		        </div>
+		      </div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<script src="{% static 'signup/js/jquery.min.js' %}"></script>
+  <script src="{% static 'signup/js/popper.js' %}"></script>
+  <script src="{% static 'signup/js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'signup/js/main.js' %}"></script>
+
+	</body>
+</html>
+
