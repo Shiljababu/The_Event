@@ -11,6 +11,7 @@ from django.utils import timezone
 from .forms import UserForm, ProfileForm
 from django.utils import timezone
 from django.db.models import Avg, Count
+from django.db import models
 from django.contrib.auth import logout as auth_logout
 
 
@@ -113,7 +114,7 @@ def ticket(request):
 
 
 
-@login_required(login_url='/404/')
+
 def get_interested_count(event):
     return Interest.objects.filter(event=event).count()
 
@@ -135,9 +136,23 @@ def view_event(request, event_type, event_id):
     is_interested = Interest.objects.filter(event=event, user=request.user).exists()
    
     interests_count = get_interested_count(event)
+    user_ratings = {review.user.id: review.rating for review in reviews}
 
     if not ticket:
         return HttpResponse("No tickets available for this event.", status=404)
+
+    filled_stars = 0
+    empty_stars = 5
+    event_rating = 0
+
+    if reviews:
+        event_rating = reviews.aggregate(avg_rating=models.Avg('rating'))['avg_rating'] or 0
+        filled_stars = int(event_rating)
+        empty_stars = 5 - filled_stars
+
+    # Create ranges for filled and empty stars
+    filled_star_range = range(filled_stars)
+    empty_star_range = range(empty_stars)
 
     if request.method == 'POST':
         form = TicketSelectionForm(request.POST)
@@ -194,6 +209,10 @@ def view_event(request, event_type, event_id):
         'interests_count': interests_count,  # Add interest count here
         'is_interested': is_interested,
         'range': range(1, 6),
+        'event_rating': event_rating,
+        'filled_star_range': filled_star_range,
+        'empty_star_range': empty_star_range,
+        'user_ratings': user_ratings,
     }
 
     return render(request, 'userpanel/view_event.html', context)

@@ -10,6 +10,9 @@ from django.db.models import Sum
 from .models import BankAccount, Event, EventDeletionRequest, Interest, Notification, Review, Ticket, User, Profile, Venue
 from django.contrib.auth import logout as auth_logout
 from django.db import models
+from django.shortcuts import get_object_or_404, redirect
+from .models import Review, Event
+logger = logging.getLogger(__name__)
 
 # Create your views here.
 def is_staff(user):
@@ -543,9 +546,6 @@ def delete_venue(request, venue_id):
     return redirect('view_venue') 
 
 
-from django.shortcuts import get_object_or_404, redirect
-from .models import Review, Event
-logger = logging.getLogger(__name__)
 @login_required(login_url='/404/')
 @user_passes_test(is_staff)
 def view_each_event(request, event_id):

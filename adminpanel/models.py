@@ -165,9 +165,10 @@ class ReviewLikeDislike(models.Model):
 
 
 class Interest(models.Model):
-    event = models.ForeignKey('Event', on_delete=models.CASCADE)
+    
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    interested_at = models.DateTimeField(auto_now_add=True)
+    event = models.ForeignKey('Event', on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
 
 
     class Meta:

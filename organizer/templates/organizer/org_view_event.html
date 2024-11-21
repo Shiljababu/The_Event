@@ -6,6 +6,7 @@
 {% endblock %}
 
 {% block content %}
+
 <section id="hero" class="hero section dark-background">
     <!-- Background Image (blurred) -->
     <div class="background-image"></div>
@@ -24,9 +25,33 @@
         <!-- Display 'Rate Now' button only for movie events -->
         {% if event.event_type == 'movie' %}
             <button class="rate-now-btn">Rate Now</button>
+
+            <!-- Display the rating -->
+            <div class="event-rating">
+                <strong>Average Rating:</strong>
+                {% if event_rating %}
+                    <span>{{ event_rating }} / 5</span>
+                    <!-- Display filled stars -->
+                    <div class="stars">
+                        {% for i in filled_star_range %}
+                            <span class="star filled-star">★</span>
+                        {% endfor %}
+                        <!-- Display empty stars -->
+                        {% for i in empty_star_range %}
+                            <span class="star empty-star">☆</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <span>No ratings yet</span>
+                {% endif %}
+            </div>
         {% endif %}
     </div>
 </section>
+
+<!-- Additional sections below -->
+
+
 
 
 <style>
@@ -121,6 +146,33 @@
 .rate-now-btn:hover {
     background-color: #ff6a00;
 }
+.stars {
+    display: inline-block;
+}
+
+.stars {
+    display: inline-block;
+}
+
+.star {
+    font-size: 24px;
+    margin: 0 2px;
+}
+
+.filled-star {
+    color: #FFD700 !important; /* Gold color for filled stars */
+}
+
+.empty-star {
+    color: #D3D3D3 !important; /* Light gray color for empty stars */
+}
+
+.event-rating span {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333; /* Dark text for the rating value */
+}
+
 </style>
 
 
@@ -301,11 +353,14 @@
                             <h4>{{ review.user.username }}</h4>
                         </div>
                         <div class="review-rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                            <i class="far fa-star"></i>
+                            <!-- Loop through the rating stars -->
+                            {% for i in "12345" %}
+                                {% if i|add:0 <= review.rating %}
+                                    <i class="fas fa-star"></i>  <!-- Filled star -->
+                                {% else %}
+                                    <i class="far fa-star"></i>  <!-- Empty star -->
+                                {% endif %}
+                            {% endfor %}
                         </div>
                     </div>
                     <div class="review-body">

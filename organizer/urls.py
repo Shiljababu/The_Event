@@ -1,10 +1,9 @@
 from django.urls import path
-from .views import drafts, org_login, org_register, org_home, attendees, org_profile, add_event, edit_event, delete_event, contact_form, hidden_events, notification, edit_org_profile, org_reset_pass, org_view_event, org_forgot, org_otp, logout
+from .views import drafts, org_login, org_register, org_home, org_profile, add_event, edit_event, delete_event, contact_form, hidden_events, notification, edit_org_profile, org_reset_pass, org_view_event, org_forgot, org_otp, logout
 urlpatterns = [
     path('', org_register, name = 'org_register'),
     path('org_login/', org_login, name = 'org_login'),  
     path('org_home/', org_home, name = 'org_home'), 
-    path('attendees/', attendees, name = 'attendees'),   
     path('org_profile/', org_profile, name = 'org_profile'), 
     path('add_event/', add_event, name = 'add_event'), 
     path('edit_event/<int:event_id>/', edit_event, name = 'edit_event'), 

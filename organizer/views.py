@@ -11,6 +11,7 @@ from .forms import EventForm, ForgotForm, LoginForm, OtpForm, ProfileForm, Regis
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth import authenticate, login
 from django.utils import timezone
+from django.db import models
 from django.contrib.auth import logout as auth_logout
 # Create your views here.
 
@@ -159,9 +160,6 @@ def drafts(request):
 
 
 
-def attendees(request):
-    # Show the 'site_home.html' page to the user.
-    return render(request, 'organizer/attendees.html')
 
 @login_required(login_url='/404/')
 def contact_form(request, event_id):
@@ -304,6 +302,7 @@ def add_event(request):
 
 
 @login_required(login_url='/404/')
+@user_passes_test(is_organizer)
 def edit_event(request, event_id):
     event = get_object_or_404(Event, id=event_id)
     event_type = event.event_type
@@ -348,18 +347,24 @@ def org_view_event(request, event_type, event_id):
     # Fetch the event object
     event = get_object_or_404(Event, id=event_id, event_type=event_type)
 
-    # Fetch reviews only if the event is of type 'movie'
+    
+    # Rating or interest count based on event type
     reviews = None
     if event.event_type == 'movie':
         reviews = Review.objects.filter(event=event, status='visible')
-
+        user_ratings = {review.user.id: review.rating for review in reviews}
+        event_rating = reviews.aggregate(avg_rating=models.Avg('rating'))['avg_rating'] or 0
     # Fetch count of interests and check if the current user is interested
     interests_count = Interest.objects.filter(event=event).count()
     is_interested = Interest.objects.filter(event=event, user=request.user).exists()
-
+    
     # Count of users booked for tickets
     standard_ticket_count = Ticket.objects.filter(event=event, ticket_type='standard').count()
     premium_ticket_count = Ticket.objects.filter(event=event, ticket_type='premium').count()
+    filled_stars = int(event_rating)
+    empty_stars = 5 - filled_stars
+    filled_star_range = range(filled_stars)
+    empty_star_range = range(empty_stars)
 
     context = {
         'event': event,
@@ -368,6 +373,12 @@ def org_view_event(request, event_type, event_id):
         'reviews': reviews,
         'interests_count': interests_count,
         'is_interested': is_interested,
+        'event_rating': event_rating if event.event_type == 'movie' else None,
+        'empty_stars': empty_stars,
+        'filled_stars': filled_stars,
+        'filled_star_range': filled_star_range,
+        'empty_star_range': empty_star_range,
+        'user_ratings':user_ratings,
     }
 
     return render(request, 'organizer/org_view_event.html', context)
@@ -502,8 +513,6 @@ def org_otp(request):
     return render(request, 'organizer/org_otp.html', {'form': form})
 
 
-
-@login_required(login_url='/404/')
 def notify_users_on_event_update(event):
     interested_users = Interest.objects.filter(event=event).select_related('user')
     print(f"Found {interested_users.count()} users interested in event: {event.title}")  # Log the count
