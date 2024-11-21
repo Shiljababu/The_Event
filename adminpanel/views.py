@@ -6,7 +6,6 @@ from adminpanel.forms import AdminResetForm, LoginForm, VenueForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.db.models import Sum
-# from adminpanel.tasks import send_activation_email_task, send_deactivation_email_task
 from .models import BankAccount, Event, EventDeletionRequest, Interest, Notification, Review, Ticket, User, Profile, Venue
 from django.contrib.auth import logout as auth_logout
 from django.db import models
@@ -334,15 +333,13 @@ def userlist(request):
             if action == "activate":
                 user.is_active = True
                 user.save()
-                # Call the task to send a deactivation email to the user, passing their email and username
-                # send_deactivation_email_task.delay(email=user.email, username=user.username, role="user")
+               
 
                 messages.success(request, f"{user.username} has been activated.")
             elif action == "deactivate":
                 user.is_active = False
                 user.save()
-                # Call the task to send an activation email to the user, passing their email and username
-                # send_activation_email_task.delay(email=user.email, username=user.username, role="user")
+                
 
                 messages.success(request, f"{user.username} has been deactivated.")
             
@@ -396,12 +393,12 @@ def organizer_list(request):
             if action == "activate":
                 user.is_active = True
                 user.save()
-                # send_activation_email_task.delay(email=user.email, username=user.username, role="organizer")
+                
                 messages.success(request, f"{user.username} has been activated.")
             elif action == "deactivate":
                 user.is_active = False
                 user.save()
-                # send_deactivation_email_task.delay(email=user.email, username=user.username, role="organizer")
+                
                 messages.success(request, f"{user.username} has been deactivated.")
 
     # Fetch organizers based on the `role` in the Profile model

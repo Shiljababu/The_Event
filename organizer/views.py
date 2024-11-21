@@ -6,7 +6,6 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib import messages
 from adminpanel.models import Event, EventDeletionRequest, Interest, Notification, Profile, Review, Ticket, User
 from django.contrib.auth import login
-# from .tasks import send_otp_email_task, send_registration_email_task, send_verification_email_task
 from .forms import EventForm, ForgotForm, LoginForm, OtpForm, ProfileForm, RegistrationForm, ResetForm, TicketForm, UserForm
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth import authenticate, login
@@ -27,8 +26,7 @@ def org_register(request):
             user = user_form.save(commit=False)
             user.email = user_form.cleaned_data.get('email')
             user.save()
-            # Send email using Celery
-            # send_registration_email_task.delay(user.email, user.username)
+            
             profile = profile_form.save(commit=False)
             profile.user = user
             profile.role = 'organizer'  # Set role to 'organizer'
@@ -396,19 +394,9 @@ def org_forgot(request):
             email = form.cleaned_data.get('email')
             # Check if an organizer with that email exists.
             if Profile.objects.filter(user__email=email, role='organizer').exists():
-                # Generate a 6-digit OTP
-                # otp_code = ''.join(random.choices('0123456789', k=6))
-                # Send the OTP to the organizer's email using Celery task
-                # send_otp_email_task.delay(email, otp_code)
-                # Show a success message if the email is found.
+                
                 messages.success(request, 'Instructions to reset your password have been sent to your email.')
-                # Store the generated OTP in the session
-                # request.session['otp_code'] = otp_code
-                # Store the organizer's email in the session
-                # request.session['email'] = email
-                # Store the current time as a string
-                # request.session['otp_created_at'] = str(datetime.now())
-                # Redirect the user to the OTP verification page
+                
                 return redirect('org_otp')
             else:
                 # Show an error if the email is not found or not an organizer
@@ -438,36 +426,6 @@ def org_otp(request):
         if form.is_valid():
 
 
-            # Get the entered OTP from the form
-            # entered_otp = form.cleaned_data.get('otp')
-
-
-            # Get the OTP stored in the session
-            # session_otp = request.session.get('otp_code')
-
-
-            # Get the email address from the session
-            # email = request.session.get('email')
-       
-            # Get the time when the OTP was created from the session
-            # otp_created_at = request.session.get('otp_created_at')
-            
-            # Check if there is an OTP and its creation time in the session
-            # if session_otp and otp_created_at:
-
-
-                # Convert the creation time from the session to a datetime object
-                # otp_creation_time=datetime.fromisoformat(otp_created_at)
-                
-                # Get the current time
-                # current_time = datetime.now()
-
-
-                # Calculate the difference in minutes between the current time and OTP creation time
-                # time_diff = (current_time - otp_creation_time).total_seconds() / 60  
-            
-            # Check if the time difference is greater than 5 minutes 
-            # if time_diff > 5:
 
 
                 # Show an error message that the OTP has expired
@@ -476,24 +434,14 @@ def org_otp(request):
                 return redirect('org_otp')
 
 
-            # Check if the entered OTP matches the session OTP
-            # if entered_otp == session_otp:
-
 
                 # Show a success message that the OTP is verified
                 messages.success(request, 'OTP verified successfully!')
 
 
-                # Send a confirmation email after the OTP is verified
-                # send_verification_email_task.delay(email)
+               
 
-
-                # Remove the OTP from the session to prevent reuse
-                # request.session.pop('otp', None) 
-
-
-                # Redirect the user to the reset password page
-                return redirect('org_reset_pass')
+                
 
 
         else:
@@ -502,7 +450,7 @@ def org_otp(request):
 
 
                 # Redirect the user back to the OTP page
-                return redirect('org_otp')
+                return redirect('org_reset_pass')
 
 
     else:
