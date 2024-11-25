@@ -330,7 +330,7 @@ def notification(request):
     return render(request, 'organizer/notification.html', {'notifications': notifications})
 
 
-@login_required(login_url='/404/')
+
 def get_interested_count(event):
     return Interest.objects.filter(event=event).count()
 

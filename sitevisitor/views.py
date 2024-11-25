@@ -6,6 +6,8 @@ from adminpanel.models import Event, Profile, User
 from .forms import LoginForm, OtpForm, ProfileForm, RegistrationForm, ResetForm, ForgotForm
 from django.contrib.auth import authenticate, login
 from datetime import datetime, timezone
+from django.contrib.auth import get_user_model
+
 
 
 def update_event_status():
@@ -33,6 +35,8 @@ def sitehome(request):
     return render(request, 'sitevisitor/sitehome.html', context)
 
 
+
+
 def register(request):
     if request.method == 'POST':
         user_form = RegistrationForm(request.POST)
@@ -47,8 +51,7 @@ def register(request):
             profile = profile_form.save(commit=False)
             profile.user = user
             profile.save()
-            # Send email using Celery
-            # send_registration_email_task.delay(user.email, user.username)
+           
             login(request, user)
             messages.success(request, 'Successfully registered')
             return redirect('site_login')
@@ -336,10 +339,7 @@ def reset(request):
     # Show the 'reset.html' page with the form.
     return render(request, 'sitevisitor/reset.html', {'form': form})
 
-from django.contrib.auth import get_user_model
-from django.contrib import messages
-from django.shortcuts import render, redirect
-from .forms import ResetForm
+
 
 def org_reset(request):
     # If the request is POST (form submission)
