@@ -281,7 +281,7 @@ def edit_profile(request):
     }
     return render(request, 'userpanel/edit_profile.html', context)
 
-@login_required(login_url='/404/')
+
 def validate_expiry_date(expiry_date):
     try:
         expiry = datetime.strptime(expiry_date, "%m/%y")
@@ -290,7 +290,7 @@ def validate_expiry_date(expiry_date):
     except ValueError:
         return False
 
-@login_required(login_url='/404/')
+
 # Function to validate the bank account
 def validate_account(card_number, cvv, expiry_date):
     try:
@@ -513,6 +513,10 @@ def payment_page(request, event_id, ticket_type='standard', ticket_count=1):
             else:
                 messages.error(request, "Insufficient balance or invalid account details.")
 
+            if not request.user.is_authenticated:
+                messages.error(request, "You need to be logged in to proceed.")
+                return redirect('site_login')  # Redirect to the login page if not authenticated
+
     account_balance = request.session.get('account_balance')
     account_number = request.session.get('account_number')
     if account:
@@ -539,7 +543,7 @@ def payment_page(request, event_id, ticket_type='standard', ticket_count=1):
     }
 
     return render(request, 'userpanel/payment_page.html', context)
-
+    
 
 @login_required(login_url='/404/')
 def payment_success(request):

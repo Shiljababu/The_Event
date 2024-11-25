@@ -17,8 +17,6 @@ class TicketSelectionForm(forms.Form):
 
 class AccountCheckForm(forms.Form):
     
-    username = forms.CharField(label = "Username")
-    
     card_number = forms.CharField(label="Card Number", max_length=16, min_length=10)
     card_expiry_date = forms.CharField(label="Card Expiry Date", max_length=5, help_text="Format: MM/YY")
     cvv = forms.CharField(label="CVV", max_length=3, min_length=3, widget=forms.PasswordInput)
