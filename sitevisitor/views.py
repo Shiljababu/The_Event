@@ -26,10 +26,10 @@ def sitehome(request):
     context = {
         'events': {
             'Movie': Event.objects.filter(event_type='movie', is_approved = True, status = 'visible'),
-            'Event': Event.objects.filter(event_type='event', is_approved = True),
+            'Event': Event.objects.filter(event_type='event', is_approved = True, status = 'visible'),
             'Sport': Event.objects.filter(event_type='sport', is_approved = True, status = 'visible'),
-            'Play': Event.objects.filter(event_type='play', is_approved = True),
-            'Activitie': Event.objects.filter(event_type='activity', is_approved = True),
+            'Play': Event.objects.filter(event_type='play', is_approved = True, status = 'visible'),
+            'Activities': Event.objects.filter(event_type='activity', is_approved = True, status = 'visible'),
         }
     }
     return render(request, 'sitevisitor/sitehome.html', context)

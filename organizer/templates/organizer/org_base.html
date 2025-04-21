@@ -59,12 +59,27 @@
 
       <nav id="navmenu" class="navmenu">
         <ul>
-          <li><a href="{% url 'org_home' %}" class="active">Home<br></a></li>
-          <li><a href="{% url 'add_event' %}">Add Event</a></li>
-          <li><a href="{% url 'notification' %}">Notifications</a></li>
+          <li>
+            <a href="{% url 'org_home' %}" class="{% if request.resolver_match.url_name == 'org_home' %}active{% endif %}">
+              Home
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'add_event' %}" class="{% if request.resolver_match.url_name == 'add_event' %}active{% endif %}">
+              Add Event
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'notification' %}" class="{% if request.resolver_match.url_name == 'notification' %}active{% endif %}">
+              Notifications
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'drafts' %}" class="{% if request.resolver_match.url_name == 'drafts' %}active{% endif %}">
+              History
+            </a>
+          </li>
           
-          
-          <li><a href="{% url 'drafts' %}"> History</a></li>
           <li class="nav-item dropdown fas fa-user">
             <a href="#" class="nav-link dropdown-toggle" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                 {% if user.profile.profile_image %}

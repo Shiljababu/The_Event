@@ -59,14 +59,15 @@
 
       <nav id="navmenu" class="navmenu">
         <ul>
-          <li><a href="{% url 'userhome' %}" class="active">Home<br></a></li>
-          <li><a href="{% url 'movies' %}">Movies</a></li>
-          <li><a href="{% url 'events' %}">Conference</a></li>
-          <li><a href="{% url 'sports' %}">Sports</a></li>
-          <li><a href="{% url 'plays' %}">Plays</a></li>
-          <li><a href="{% url 'activities' %}">Activities</a></li>
           
-          
+        
+        <li><a href="{% url 'userhome' %}" class="{% if request.resolver_match.url_name == 'userhome' %}active{% endif %}">Home<br></a></li>
+        <li><a href="{% url 'movies' %}" class="{% if request.resolver_match.url_name == 'movies' %}active{% endif %}">Movies</a></li>
+        <li><a href="{% url 'events' %}" class="{% if request.resolver_match.url_name == 'events' %}active{% endif %}">Conference</a></li>
+        <li><a href="{% url 'sports' %}" class="{% if request.resolver_match.url_name == 'sports' %}active{% endif %}">Sports</a></li>
+        <li><a href="{% url 'plays' %}" class="{% if request.resolver_match.url_name == 'plays' %}active{% endif %}">Plays</a></li>
+        <li><a href="{% url 'activities' %}" class="{% if request.resolver_match.url_name == 'activities' %}active{% endif %}">Activities</a></li>
+        
           
           <li class="nav-item dropdown fas fa-user">
             <a href="#" class="nav-link dropdown-toggle" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
@@ -112,7 +113,7 @@
       
     </div>
   </header>
-  <{% if messages %}
+  {% if messages %}
   <script>
       {% for message in messages %}
           alert("{{ message|escapejs }}");

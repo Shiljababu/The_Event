@@ -65,7 +65,7 @@ def movies(request):
     update_event_status()
     
     # Fetch movies
-    movies = Event.objects.filter(event_type='movie')
+    movies = Event.objects.filter(event_type='movie', status='visible', is_approved=True)
     
     for movie in movies:
         # Calculate the average rating
@@ -82,28 +82,28 @@ def movies(request):
 @login_required(login_url='/404/')
 def events(request):
     update_event_status()
-    events = Event.objects.filter(event_type='event', status='visible')
+    events = Event.objects.filter(event_type='event', status='visible', is_approved=True)
     return render(request, 'userpanel/conference.html', {'events':events})
 
 
 @login_required(login_url='/404/')
 def activities(request):
     update_event_status()
-    activities = Event.objects.filter(event_type='activity', status='visible')
+    activities = Event.objects.filter(event_type='activity', status='visible', is_approved=True)
     return render(request, 'userpanel/activities.html', {'activities':activities})
 
 
 @login_required(login_url='/404/')
 def sports(request):
     update_event_status()
-    sports = Event.objects.filter(event_type='sport', status='visible')
+    sports = Event.objects.filter(event_type='sport', status='visible', is_approved=True)
     return render(request, 'userpanel/sports.html', {'sports':sports})
 
 
 @login_required(login_url='/404/')
 def plays(request):
     update_event_status()
-    plays = Event.objects.filter(event_type='play', status='visible')
+    plays = Event.objects.filter(event_type='play', status='visible', is_approved=True)
     return render(request, 'userpanel/plays.html', {'plays':plays})
 
 
@@ -136,7 +136,7 @@ def view_event(request, event_type, event_id):
     is_interested = Interest.objects.filter(event=event, user=request.user).exists()
    
     interests_count = get_interested_count(event)
-    user_ratings = {review.user.id: review.rating for review in reviews}
+    user_ratings = {review.user.id: review.rating for review in reviews} if reviews else {}
 
     if not ticket:
         return HttpResponse("No tickets available for this event.", status=404)
@@ -545,19 +545,32 @@ def payment_page(request, event_id, ticket_type='standard', ticket_count=1):
     return render(request, 'userpanel/payment_page.html', context)
     
 
+
 @login_required(login_url='/404/')
 def payment_success(request):
-    try:
-        # Try to retrieve the bank account associated with the current user
-        bank_account = BankAccount.objects.get(user=request.user)
-    except BankAccount.DoesNotExist:
-        bank_account = None  # Set to None if no bank account exists
-    
+    # Retrieve the account number from the session data
+    account_number = request.session.get('account_number')
+    bank_account = None
+
+    if account_number:
+        try:
+            # Fetch the bank account details based on the account number
+            bank_account = BankAccount.objects.get(account_number=account_number)
+        except BankAccount.DoesNotExist:
+            bank_account = None  # Handle the case where the account doesn't exist
+
+            # Clear session variables related to payment
+    request.session.pop('account_number', None)
+    request.session.pop('account_balance', None)
+    request.session.pop('account_verified', None)
+
     context = {
         'bank_account': bank_account,
     }
 
     return render(request, 'userpanel/payment_success.html', context)
+
+
 
 @login_required(login_url='/404/')
 def like_dislike_review(request, review_id, action):

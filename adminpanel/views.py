@@ -205,7 +205,7 @@ def approve_events(request):
         event_id = request.POST.get('event_id')
         event = Event.objects.get(id=event_id)
         event.is_approved = True
-        
+        event.status = 'visible'
         event.save()
         organizer = event.organizer.user  # Assuming 'organizer' is a Profile model with a OneToOne relation to User
 

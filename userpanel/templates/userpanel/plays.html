@@ -1,8 +1,10 @@
 {% extends 'userpanel/user_base.html' %}
 {% load static %}
+
 {% block title %}
     Event | Plays
 {% endblock %}
+
 {% block content %}
 <style>
     .page-title {
@@ -10,52 +12,56 @@
         background-size: cover;
         background-position: center;
         height: 300px;
-        text-align: center;
-        color: #fff;
         display: flex;
         justify-content: center;
         align-items: center;
+        color: #fff;
+        text-align: center;
+        position: fixed; /* Ensures the image stays fixed on scroll */
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1;
+        transition: position 0.3s ease-out;
+    }
+
+    .hero-placeholder {
+        height: 300px; /* Makes space for the fixed hero section */
+    }
+
+    .page-title.fixed {
+        background-color: rgba(0, 0, 0, 0.5); /* Optional darker overlay when scrolling */
     }
 
     .section {
-        background-color: #03084ecb;
-        color: #fcf8f8;
-        padding: 20px;
+        font-size: 1.5rem;
+        font-weight: 600;
+        text-align: left;
+        margin: 20px 30px 10px;
+        color: #c41d11;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        padding: 8px 15px;
+        background-color: white;
+        border-left: 4px solid #c41d11;
         border-radius: 5px;
-        margin-top: 30px;
-        font-size: 1.25rem;
-        font-weight: bold;
-        text-align: center;
     }
 
     .scroll-container {
         display: flex;
-        overflow-x: auto;
-        gap: 20px;
-        padding: 20px;
-        scroll-behavior: smooth;
-    }
-
-    .scroll-container::-webkit-scrollbar {
-        height: 8px;
-    }
-
-    .scroll-container::-webkit-scrollbar-thumb {
-        background: #444;
-        border-radius: 5px;
-    }
-
-    .scroll-container::-webkit-scrollbar-track {
-        background: #ddd;
+        flex-wrap: wrap;
+        gap: 30px;
+        justify-content: flex-start;
+        padding: 10px 30px 40px;
     }
 
     .card {
-        flex: 0 0 auto;
-        width: 300px;
-        background-color: #111;
+        width: 250px;
+        background-color: white;
         border-radius: 10px;
         overflow: hidden;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
@@ -65,18 +71,19 @@
     }
 
     .card-img-top {
-        height: 200px;
+        width: 100%;
+        height: 300px;
         object-fit: cover;
     }
 
     .card-body {
         padding: 15px;
-        color: #fff;
         text-align: center;
+        color: #333;
     }
 
     .card-title {
-        font-size: 1.25rem;
+        font-size: 1.3rem;
         font-weight: bold;
         margin-bottom: 10px;
     }
@@ -88,35 +95,70 @@
         font-weight: bold;
         padding: 10px;
         border-radius: 5px;
+        margin: 20px 30px;
+    }
+
+    @media (max-width: 768px) {
+        .card {
+            width: 90%;
+        }
+
+        .page-title h1 {
+            font-size: 2rem;
+        }
+
+        .scroll-container {
+            padding: 10px 10px 40px;
+        }
+
+        .section {
+            margin: 20px 10px 10px;
+        }
     }
 </style>
 
-<main class="main">
-    <div class="page-title" data-aos="fade"></div>
-</main>
+<!-- Hero Section -->
+<div class="page-title fixed" id="hero">
+    <h1>All Plays</h1>
+</div>
+<div class="hero-placeholder"></div>
 
+<!-- Plays Section -->
 <h5 class="section">Plays</h5>
 
 <div class="scroll-container">
     {% if plays %}
         {% for play in plays %}
-        <a href="{% url 'view_event' play.event_type play.id %}">
-            <div class="card">
-                {% if play.event_image %}
-                    <img class="card-img-top" src="{{ play.event_image.url }}" alt="{{ play.title }} Image" />
-                {% else %}
-                    <img class="card-img-top" src="{% static 'sneat/assets/img/elements/default.jpg' %}" alt="Default Image" />
-                {% endif %}
-                <div class="card-body">
-                    <h5 class="card-title">{{ play.title }}</h5>
+            <a href="{% url 'view_event' play.event_type play.id %}" style="text-decoration: none;">
+                <div class="card">
+                    {% if play.event_image %}
+                        <img class="card-img-top" src="{{ play.event_image.url }}" alt="{{ play.title }} Image" />
+                    {% else %}
+                        <img class="card-img-top" src="{% static 'sneat/assets/img/elements/default.jpg' %}" alt="Default Image" />
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ play.title }}</h5>
+                    </div>
                 </div>
-            </div>
-        </a>
+            </a>
         {% endfor %}
     {% else %}
         <div class="alert alert-warning" role="alert">
-            No plays added yet.
+            No Plays added yet.
         </div>
     {% endif %}
 </div>
+
+<!-- Scroll Fix Script -->
+<script>
+    window.addEventListener('scroll', function () {
+        var hero = document.getElementById('hero');
+        if (window.scrollY > 0) {
+            hero.classList.remove('fixed');
+        } else {
+            hero.classList.add('fixed');
+        }
+    });
+</script>
+
 {% endblock %}

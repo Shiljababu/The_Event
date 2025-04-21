@@ -1,262 +1,199 @@
 {% extends 'sitevisitor/site_base.html' %}
 {% load static %}
-{% block title %}
-    Event | SiteHome
-{% endblock %}
+{% block title %}Event | SiteHome{% endblock %}
+
 {% block content %}
 <style>
     .section {
-        background-color: #03084ecb;
-        color: #fcf8f8;
-        padding: 10px 20px;
-        border-radius: 5px;
-        margin-bottom: 30px;
-    }
-    body {
-        background-color: rgba(224, 215, 215, 0.486);
-        background-size: cover;
-        background-attachment: fixed;
-        background-position: center;
-        background-repeat: no-repeat;
-    }
-    .hero {
-        background-color: rgba(0, 0, 0, 0.7);
-        padding: 60px 0;
-    }
-    .card {
-        transition: box-shadow 0.3s ease;
-        border-radius: 10px;
-    }
-    .card:hover {
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-    }
-   
-    
-    .carousel-item {
-        height: 400px; /* Adjust height as needed */
-    }
-
-    /* Event card styling */
-.event-card {
-    width: 250px;
-    margin: 15px;
-    display: inline-block;
-    position: relative;
-    border-radius: 10px;
-    overflow: hidden;
-    background-color: white;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.event-card:hover {
-    transform: scale(1.05);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-}
-
-/* Adding the moving shine effect */
-.event-card::before {
-    content: '';
-    position: absolute;
-    top: -100%; /* Start from above the card */
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0) 70%);
-    transform: rotate(45deg);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-/* Add shine effect when hovering over the card */
-.event-card:hover::before {
-    opacity: 5; /* Make it visible */
-    animation: shine 3s forwards;
-}
-
-/* Shine animation moving from bottom to top */
-@keyframes shine {
-    0% {
-        top: 100%; /* Start from the bottom */
-    }
-    100% {
-        top: -100%; /* End at the top */
-    }
-}
-
-/* Card image and other elements */
-.card-img-top {
-    width: 100%;
-    height: 180px; /* Adjust height as necessary */
-    object-fit: cover;
-}
-
-.event-scroll-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    align-items: flex-start;
-    gap: 15px;
-}
-
-.section {
-    margin-top: 30px;
-    font-size: 1.25rem;
-    color: #333;
+    font-size: 2rem;
     font-weight: bold;
-}
-
-.hero img {
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-}
-
-.carousel-inner img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-/* Event card styling */
-.event-card .card {
-    border: none;
-    border-radius: 15px;
-    overflow: hidden;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.911);
-    background-color: #fff;
-}
-
-.event-card .card-img-top {
-    height: 300px;
-    object-fit: cover;
-    border-bottom: 2px solid #ddd;
-}
-
-.event-card .card-body {
-    padding: 0px 5px;
-}
-
-.event-card .card-title {
-    font-size: 1.5rem;
     text-align: center;
-    font-weight: bold;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    color: #c41d11;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
-
-/* Rating section */
-.rating {
-    display: flex;
-    justify-content: center;
-    margin-top: 5px;
-}
-
-.rating span {
-    font-size: 1.5rem;
-    color: #f4b400; /* Star color */
-}
-
-
-</style>
-
-
-
-<style>
-    /* Styling for full-screen background image */
-    .page-title {
-        background-image: url('{% static "The_event/assets/img/page-title-bg.webp" %}');
-        background-size: cover; /* Ensure the image covers the entire area */
-        background-position: center; /* Center the image */
-        height: 100vh; /* Full screen height */
-        width: 100%; /* Full width */
-        margin: 0; /* Remove any default margins */
-        display: flex; /* Optional: For centering content */
-        align-items: center; /* Optional: Center vertically */
-        justify-content: center; /* Optional: Center horizontally */
-        text-align: center; /* Optional: Align text center */
-        color: white; /* Optional: Text color for overlay text */
-    }
-
-    /* Styling for cards */
-    .section {
-        background-color: #03084ecb;
-        color: #fcf8f8;
-        padding: 10px 20px;
-        border-radius: 5px;
-    }
-
-    .card {
-        transition: box-shadow 0.3s ease;
-    }
-
-    .card:hover {
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-    }
-
-    /* Body styling */
+    
     body {
-        margin: 0; /* Remove body margin */
-        overflow-x: hidden; /* Prevent horizontal scroll */
-        background-color: rgba(224, 215, 215, 0.486);
+        background-color: #f7f9fc;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 0;
     }
 
-    .main {
-        margin-top: 0; /* Remove any extra margin above main content */
+    .page-title {
+        background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+                    url('{% static "The_event/assets/img/page-title-bg.webp" %}') no-repeat center center;
+        background-size: cover;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        text-align: center;
+        position: relative;
+        z-index: 1;
+        transition: position 0.3s ease-out;
     }
+
+    .page-title.fixed {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 10;
+    }
+
+    .page-title h1 {
+        font-size: 4rem;
+        font-weight: bold;
+        text-shadow: 2px 2px 8px rgb(255, 255, 255);
+        margin-bottom: 20px;
+        z-index: 2;
+    }
+
+    .cta-button {
+        background-color: #c41d11;
+        color: #fff;
+        cursor: pointer;
+        padding: 15px 30px;
+        font-size: 1.2rem;
+        border-radius: 25px;
+        text-decoration: none;
+        margin-top: 20px;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+        position: relative; /* Add this */
+        z-index: 2; 
+    }
+
+    .page-title .cta-button:hover {
+    background-color: #d32f2f;
+    transform: scale(1.05);
+}
+
+    .event-scroll-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 30px;
+        padding: 30px;
+        justify-content: center;
+        margin-top: 120px; /* Ensuring content doesn't overlap */
+        background-color: #fff; /* White background for events */
+    }
+
+    .event-card {
+        flex: 1 1 250px;
+        max-width: 280px;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .event-card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    .event-card img {
+        width: 100%;
+        height: 350px;
+        object-fit: cover;
+    }
+
+    .card-body {
+        padding: 15px;
+        text-align: center;
+    }
+
+    .card-title {
+        font-size: 1.3rem;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 10px;
+    }
+
+    .rating {
+        display: flex;
+        justify-content: center;
+        color: #f4b400;
+        font-size: 1.2rem;
+    }
+
+    .alert {
+        margin: 20px 30px;
+        font-size: 1.1rem;
+        color: #856404;
+        background-color: #fff3cd;
+        border-color: #ffeeba;
+        padding: 10px 20px;
+        border-radius: 8px;
+    }
+
+    @media (max-width: 768px) {
+        .page-title h1 {
+            font-size: 2.5rem;
+        }
+
+        .event-card {
+            flex: 1 1 100%;
+            max-width: 90%;
+        }
+
+
+    }
+    
 </style>
+
 <!-- Hero Section -->
-<main class="main">
-    <!-- Fullscreen Background Image -->
-    <div class="page-title" data-aos="fade">
-        <h1><a href="index.html" class="logo d-flex align-items-center me-auto">
-            <img src="{% static 'The_event/assets/img/logo.png' %}" alt="">
-            <!-- Uncomment the line below if you also wish to use a text logo -->
-            <!-- <h1 class="sitename">TheEvent</h1>  -->
-          </a></h1>
-        
-    </div>
+<div class="page-title" id="hero">
+    <h1>Discover Upcoming Events</h1>
+    <a href="{% url 'site_login' %}" class="cta-button">Buy Tickets</a>
+</div>
 
-<br>
-
-{% for category, items in events.items %}
-    <h5 class="section">{{ category }}</h5>
-    <div class="event-scroll-container">
+<!-- Event Cards Section -->
+<div class="section">Featured Events</div>
+<div class="event-scroll-container">
+    {% for category, items in events.items %}
         {% if items %}
             {% for item in items %}
                 <div class="event-card">
-                    <a href="{% url 'site_login' %}" class="card-link" style="text-decoration: none; color: inherit;">
-                        <div class="card mb-3">
-                            {% if item.event_image %}
-                                <img class="card-img-top" src="{{ item.event_image.url }}" alt="{{ item.title }} Image" />
-                            {% else %}
-                                <img class="card-img-top" src="{% static 'sneat/assets/img/elements/default.jpg' %}" alt="Default Image" />
+                    <a href="{% url 'site_login' %}" style="text-decoration: none;">
+                        {% if item.event_image %}
+                            <img src="{{ item.event_image.url }}" alt="{{ item.title }}">
+                        {% else %}
+                            <img src="{% static 'sneat/assets/img/elements/default.jpg' %}" alt="Default Image">
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ item.title }}</h5>
+                            {% if category|lower == "movie" %}
+                                <div class="rating">
+                                    {% for i in item.filled_stars %}<span>&#9733;</span>{% endfor %}
+                                    {% for i in item.empty_stars %}<span>&#9734;</span>{% endfor %}
+                                </div>
                             {% endif %}
-                            <div class="card-body">
-                                <h5 class="card-title text-center">{{ item.title }}</h5>
-                                
-                                <!-- Rating Section (Only for movie events) -->
-                                {% if category|lower == "movie" %}
-                                    <div class="rating">
-                                        {% for i in item.filled_stars %}
-                                            <span>&#9733;</span> <!-- Filled star -->
-                                        {% endfor %}
-                                        {% for i in item.empty_stars %}
-                                            <span>&#9734;</span> <!-- Empty star -->
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
-                            </div>
                         </div>
                     </a>
                 </div>
             {% endfor %}
         {% else %}
-            <div class="col-12">
-                <div class="alert alert-warning" role="alert">
-                    No {{ category|lower }} added yet.
-                </div>
-            </div>
+            <div class="alert alert-warning">No events available.</div>
         {% endif %}
-    </div>
-{% endfor %}
+    {% endfor %}
+</div>
 
-{% endblock %} 
+<script>
+    window.addEventListener('scroll', function() {
+        var hero = document.getElementById('hero');
+        if (window.scrollY > 0) {
+            hero.classList.remove('fixed'); // Remove fixed positioning when scrolling
+        } else {
+            hero.classList.add('fixed'); // Add fixed positioning on top
+        }
+    });
+</script>
+
+{% endblock %}

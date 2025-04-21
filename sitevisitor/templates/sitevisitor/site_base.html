@@ -56,7 +56,7 @@
 
       <nav id="navmenu" class="navmenu">
         <ul>
-          <li><a href="{% url 'org_home' %}" class="active">Home<br></a></li>
+          <li><a href="{% url 'sitehome' %}" class="{% if request.resolver_match.url_name == 'sitehome' %}active{% endif %}">Home<br></a></li>
           <li><a href="{% url 'site_login' %}">Movies</a></li>
           <li><a href="{% url 'site_login' %}">Conference</a></li>
           <li><a href="{% url 'site_login' %}">Sports</a></li>

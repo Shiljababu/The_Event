@@ -76,65 +76,71 @@
 
           <ul class="menu-inner py-1">
             <!-- Dashboard -->
-            <li class="menu-item active">
-                <a href="{% url 'adminhome' %}" class="menu-link">
-                    <i class="menu-icon tf-icons bx bx-home-circle"></i>
-                    <div data-i18n="Analytics">Dashboard</div>
-                </a>
-            </li>
-            <li class="menu-item">
+            <li class="menu-item {% if request.resolver_match.url_name == 'adminhome' %}active{% endif %}">
+              <a href="{% url 'adminhome' %}" class="menu-link">
+                  <i class="menu-icon tf-icons bx bx-home-circle"></i>
+                  <div data-i18n="Analytics">Dashboard</div>
+              </a>
+          </li>
+          
+          <li class="menu-item {% if request.resolver_match.url_name == 'approve_events' %}active{% endif %}">
               <a href="{% url 'approve_events' %}" class="menu-link">
-                  <i class="menu-icon tf-icons bx bx-id-card"></i>  
+                  <i class="menu-icon tf-icons bx bx-id-card"></i>
                   <div data-i18n="Analytics">To be Approved</div>
               </a>
           </li>
-            <!-- Organizer List -->
-            <li class="menu-item">
-                <a href="{% url 'organizer_list' %}" class="menu-link">
-                    <i class="menu-icon tf-icons bx bx-id-card"></i>  
-                    <div data-i18n="Analytics">Organizerlist</div>
-                </a>
-            </li>
-            
-            <!-- User List -->
-            <li class="menu-item">
-                <a href="{% url 'userlist' %}" class="menu-link">
-                    <i class="menu-icon tf-icons bx bx-user-circle"></i>
-                    <div data-i18n="Analytics">Userlist</div>
-                </a>
-            </li>
-            
-            <!-- Event List with Dropdown -->
-            <li class="menu-item dropdown">
-                <a href="{% url 'movieslist' %}" class="menu-link dropdown-toggle" id="eventListDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="menu-icon tf-icons bx bx-calendar-event"></i>
-                    <div data-i18n="Analytics">Event List</div>
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="eventListDropdown">
-                    <li><a class="dropdown-item" href="{% url 'movieslist' %}">Movies</a></li>
-                    <li><a class="dropdown-item" href="{% url 'event_list' %}">Conference</a></li>
-                    <li><a class="dropdown-item" href="{% url 'sports_list' %}">Sports</a></li>
-                    <li><a class="dropdown-item" href="{% url 'plays_list' %}">Plays</a></li>
-                    <li><a class="dropdown-item" href="{% url 'activities_list' %}">Activities</a></li>
-                </ul>
-            </li>
-            <li class="menu-item">
+          
+          <li class="menu-item {% if request.resolver_match.url_name == 'organizer_list' %}active{% endif %}">
+              <a href="{% url 'organizer_list' %}" class="menu-link">
+                  <i class="menu-icon tf-icons bx bx-id-card"></i>
+                  <div data-i18n="Analytics">Organizerlist</div>
+              </a>
+          </li>
+          
+          <li class="menu-item {% if request.resolver_match.url_name == 'userlist' %}active{% endif %}">
+              <a href="{% url 'userlist' %}" class="menu-link">
+                  <i class="menu-icon tf-icons bx bx-user-circle"></i>
+                  <div data-i18n="Analytics">Userlist</div>
+              </a>
+          </li>
+          
+          <!-- Event List with Dropdown -->
+          <li class="menu-item dropdown 
+              {% if request.resolver_match.url_name in 'movieslist event_list sports_list plays_list activities_list' %}active{% endif %}">
+              <a href="{% url 'movieslist' %}" class="menu-link dropdown-toggle" id="eventListDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <i class="menu-icon tf-icons bx bx-calendar-event"></i>
+                  <div data-i18n="Analytics">Event List</div>
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="eventListDropdown">
+                  <li><a class="dropdown-item {% if request.resolver_match.url_name == 'movieslist' %}active{% endif %}" href="{% url 'movieslist' %}">Movies</a></li>
+                  <li><a class="dropdown-item {% if request.resolver_match.url_name == 'event_list' %}active{% endif %}" href="{% url 'event_list' %}">Conference</a></li>
+                  <li><a class="dropdown-item {% if request.resolver_match.url_name == 'sports_list' %}active{% endif %}" href="{% url 'sports_list' %}">Sports</a></li>
+                  <li><a class="dropdown-item {% if request.resolver_match.url_name == 'plays_list' %}active{% endif %}" href="{% url 'plays_list' %}">Plays</a></li>
+                  <li><a class="dropdown-item {% if request.resolver_match.url_name == 'activities_list' %}active{% endif %}" href="{% url 'activities_list' %}">Activities</a></li>
+              </ul>
+          </li>
+          
+          <li class="menu-item {% if request.resolver_match.url_name == 'admin_notification' %}active{% endif %}">
               <a href="{% url 'admin_notification' %}" class="menu-link">
                   <i class="menu-icon tf-icons bx bx-bell"></i>
                   <div data-i18n="Analytics">Notifications</div>
               </a>
           </li>
-          <li class="menu-item">
-            <a href="{% url 'add_venue' %}" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-user-circle"></i>
-                <div data-i18n="Analytics">Add new venue</div>
-            </a>
-            <li class="menu-item">
+          
+          <li class="menu-item {% if request.resolver_match.url_name == 'add_venue' %}active{% endif %}">
+              <a href="{% url 'add_venue' %}" class="menu-link">
+                  <i class="menu-icon tf-icons bx bx-user-circle"></i>
+                  <div data-i18n="Analytics">Add new venue</div>
+              </a>
+          </li>
+          
+          <li class="menu-item {% if request.resolver_match.url_name == 'view_venue' %}active{% endif %}">
               <a href="{% url 'view_venue' %}" class="menu-link">
                   <i class="menu-icon tf-icons bx bx-building-house"></i>
                   <div data-i18n="Analytics">VenueList</div>
               </a>
           </li>
+          
           
         </li>
         </ul>
@@ -209,7 +215,7 @@
             </div>
           </nav>
 
-          <{% if messages %}
+          {% if messages %}
           <script>
               {% for message in messages %}
                   alert("{{ message|escapejs }}");

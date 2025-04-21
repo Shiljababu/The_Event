@@ -1,5 +1,5 @@
 
-from datetime import datetime
+from datetime import date, datetime
 import random
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -350,9 +350,11 @@ def org_view_event(request, event_type, event_id):
     
     # Rating or interest count based on event type
     reviews = None
+    user_ratings = {}
+    event_rating = 0
     if event.event_type == 'movie':
         reviews = Review.objects.filter(event=event, status='visible')
-        user_ratings = {review.user.id: review.rating for review in reviews}
+        user_ratings = {review.user.id: review.rating for review in reviews} if reviews else {}
         event_rating = reviews.aggregate(avg_rating=models.Avg('rating'))['avg_rating'] or 0
     # Fetch count of interests and check if the current user is interested
     interests_count = Interest.objects.filter(event=event).count()
@@ -379,6 +381,7 @@ def org_view_event(request, event_type, event_id):
         'filled_star_range': filled_star_range,
         'empty_star_range': empty_star_range,
         'user_ratings':user_ratings,
+        'day_event': [event],
     }
 
     return render(request, 'organizer/org_view_event.html', context)
