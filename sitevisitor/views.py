@@ -82,7 +82,12 @@ def site_login(request):
             if user is not None:
                 # Exclude superusers and staff, and only allow role 'user'
                 if not user.is_staff and not user.is_superuser:
-                    profile = Profile.objects.get(user=user)
+                    try:
+                        profile = Profile.objects.get(user=user)
+                    except Profile.DoesNotExist:
+                        messages.error(request, 'Profile not found. Please register first.')
+                        return redirect('register')
+
                     if profile.role == 'user':
                         print(f"Role of {user.username} is {profile.role}")
                         login(request, user)
